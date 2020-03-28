@@ -28,6 +28,7 @@ const User = db.define(
         },
         notEmpty: true,
         isAlphanumeric: {
+          args: true,
           msg: 'Username must consist of letters and numbers'
         }
       }
@@ -42,7 +43,7 @@ const User = db.define(
         },
         notEmpty: true,
         is: {
-          args: [['^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{6,})']],
+          args: '^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{6,})',
           msg:
             'Passwords must be at least 6 characters long, lowercase/uppercase letters, at least 1 number.'
         }
@@ -66,6 +67,7 @@ const User = db.define(
         },
         notEmpty: true,
         isAlphanumeric: {
+          args: true,
           msg: 'Display name must consist of letters and numbers'
         }
       }

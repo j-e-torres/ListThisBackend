@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize');
 
 const db = new Sequelize(
-  process.env.DATABASE_URL || 'postgres://localhost/soloGraceShopper',
+  process.env.DATABASE_URL || 'postgres://localhost/listThisDB',
   { logging: false }
 );
 
