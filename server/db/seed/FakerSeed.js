@@ -13,7 +13,7 @@ const UserSeed = [
   }
 ];
 
-const GroupSeed = (count = 5) => {
+const GroupSeed = (count = 2) => {
   const _groups = [];
 
   while (_groups.length < count) {
@@ -26,7 +26,7 @@ const GroupSeed = (count = 5) => {
   return _groups;
 };
 
-const ListSeed = (count = 5) => {
+const ListSeed = (count = 4) => {
   const _lists = [];
 
   while (_lists.length < count) {

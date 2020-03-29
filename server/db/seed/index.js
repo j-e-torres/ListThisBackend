@@ -20,10 +20,16 @@ const syncAndSeed = () => {
     })
     .then(([users, groups, lists, tasks]) => {
       return Promise.all([
-        users.map(user => user.setGroups(groups))
-        // console.log(users)
+        users.map(user => user.setGroups(groups)),
+        groups[0].setLists(lists.slice(0, lists.length / 2)),
+        groups[1].setLists(lists.slice(lists.length / 2, lists.length)),
+        lists[0].setTasks(tasks.slice(0, 3)),
+        lists[1].setTasks(tasks.slice(3, 6)),
+        lists[2].setTasks(tasks.slice(6, 9)),
+        lists[3].setTasks(tasks.slice(9, 12))
       ]);
     })
+    .then(() => console.log('Database seeded'))
     .catch(err => console.error(err));
 };
 
