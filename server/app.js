@@ -5,11 +5,7 @@ module.exports = app;
 
 app.use(express.json());
 
-// app.use((err, req, res, next) => {
-//   console.error(err.message);
-//   res.status(err.status || 500).send(err.message || 'Internal Server Error');
-// });
-
+//error handling
 app.use((error, req, res, next) => {
   let errors;
   if (error.errors) {

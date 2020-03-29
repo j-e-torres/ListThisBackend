@@ -88,4 +88,20 @@ const User = db.define(
   }
 );
 
+User.prototype.changeUsername = function(oldUsername, newUsername) {
+  User.update(
+    { username: newUsername },
+    {
+      where: {
+        username: oldUsername
+      }
+    }
+  )
+    .then(user => user)
+    .catch(err => {
+      console.log(err);
+      return err;
+    });
+};
+
 module.exports = User;

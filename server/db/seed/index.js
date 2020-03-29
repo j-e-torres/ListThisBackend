@@ -5,7 +5,7 @@ const { UserSeed, TaskSeed, GroupSeed, ListSeed } = require('./FakerSeed');
 const createdSeedInstances = (model, data) => {
   return Promise.all(data.map(instance => model.create(instance)));
 };
-//
+
 const syncAndSeed = () => {
   return db
     .authenticate()
