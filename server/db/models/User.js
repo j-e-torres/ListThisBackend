@@ -65,11 +65,11 @@ const User = db.define(
         notNull: {
           msg: 'Display name required'
         },
-        notEmpty: true,
-        isAlphanumeric: {
-          args: true,
-          msg: 'Display name must consist of letters and numbers'
-        }
+        notEmpty: true
+        // isAlphanumeric: {
+        //   args: true,
+        //   msg: 'Display name must consist of letters and numbers'
+        // }
       }
     },
 

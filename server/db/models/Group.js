@@ -17,11 +17,11 @@ const Group = db.define('group', {
       notNull: {
         msg: 'Group name required'
       },
-      notEmpty: true,
-      isAlphanumeric: {
-        args: true,
-        msg: 'Group name must consist of letters and numbers'
-      }
+      notEmpty: true
+      // isAlphanumeric: {
+      //   args: true,
+      //   msg: 'Group name must consist of letters and numbers'
+      // }
     }
   }
 });

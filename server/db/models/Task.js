@@ -17,11 +17,11 @@ const Task = db.define('task', {
       notNull: {
         msg: 'Task name required'
       },
-      notEmpty: true,
-      isAlphanumeric: {
-        args: true,
-        msg: 'Task name must consist of letters and numbers'
-      }
+      notEmpty: true
+      // isAlphanumeric: {
+      //   args: true,
+      //   msg: 'Task name must consist of letters and numbers'
+      // }
     }
   }
 });

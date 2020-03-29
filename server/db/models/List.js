@@ -17,11 +17,11 @@ const List = db.define('list', {
       notNull: {
         msg: 'List name required'
       },
-      notEmpty: true,
-      isAlphanumeric: {
-        args: true,
-        msg: 'List name must consist of letters and numbers'
-      }
+      notEmpty: true
+      // isAlphanumeric: {
+      //   args: true,
+      //   msg: 'List name must consist of letters and numbers'
+      // }
     }
   }
 });

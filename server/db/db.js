@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize');
 
 const db = new Sequelize(
-  process.env.DATABASE_URL || 'postgres://localhost/listThisDB',
+  process.env.DATABASE_URL || 'postgres://localhost/listthisdb',
   { logging: false }
 );
 
