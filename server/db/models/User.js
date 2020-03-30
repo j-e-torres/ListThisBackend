@@ -26,7 +26,7 @@ const User = db.define(
         notEmpty: true,
         isAlphanumeric: {
           args: true,
-          msg: 'Username must consist of letters or numbers'
+          msg: 'Username must consist of letters or numbers.'
         }
       }
     },

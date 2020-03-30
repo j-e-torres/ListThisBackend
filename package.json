@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node server/",
     "start:dev": "nodemon server/ --ignore tests/",
-    "modelTest": "DATABASE_URL=postgres://localhost/listthisdbtest jest ./tests/modelsTest/*.spec.js --watch --runInBand --verbose"
+    "modelTest": "DATABASE_URL=postgres://localhost/listthisdbtest jest ./tests/modelsTest/*.spec.js --watch --runInBand --verbose",
+    "testTest": "DATABASE_URL=postgres://localhost/listthisdbtest mocha  ./tests/testmocha.spec.js --watch"
   },
   "author": "",
   "license": "ISC",
@@ -17,7 +18,9 @@
     "sequelize": "^5.21.5"
   },
   "devDependencies": {
+    "chai": "^4.2.0",
     "faker": "^4.1.0",
-    "jest": "^25.2.3"
+    "jest": "^25.2.3",
+    "mocha": "^7.1.1"
   }
 }

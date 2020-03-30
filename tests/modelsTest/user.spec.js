@@ -23,8 +23,6 @@ describe('User model tests', () => {
 
   describe('attributes definition', () => {
     test('Includes `id`, `username`, `password`, `displayName`, and `isGroupAdmin` fields', () => {
-      // const savedUser = newUser.save();
-
       expect(newUser).toHaveProperty('id');
       expect(newUser).toHaveProperty('username');
       expect(newUser).toHaveProperty('password');
@@ -32,67 +30,10 @@ describe('User model tests', () => {
       expect(newUser).toHaveProperty('isGroupAdmin');
     });
 
-    test('Requires `username`, `displayName`, `password` ', () => {
+    test('Requires `username`, `displayName`, `password` ', async () => {
       newUser.username = null;
       newUser.displayName = null;
       newUser.password = null;
-
-      newUser
-        .validate()
-        .then(res => {
-          if (res)
-            throw new SequelizeValidationError(
-              'Validation should fail when fields are null, double check your model validation'
-            );
-        })
-        .catch(e => {
-          // console.log(e);
-          expect(e).toBeInstanceOf(SequelizeValidationError);
-        });
-    });
-
-    test('fields cannot be empty: `username`, `displayName`, `password`', () => {
-      newUser.username = '';
-      newUser.displayName = '';
-      newUser.password = '';
-
-      newUser
-        .validate()
-        .then(res => {
-          if (res)
-            throw new SequelizeValidationError(
-              'Validation should fail when fields are null, double check your model validation'
-            );
-        })
-        .catch(e => {
-          // console.log(e);
-          expect(e).toBeInstanceOf(SequelizeValidationError);
-        });
-    });
-  });
-
-  describe('Specific properties', () => {
-    test('Username must only consist of letters or numbers', () => {
-      newUser.username = '_ubernoobie';
-
-      newUser
-        .validate()
-        .then(res => {
-          if (res)
-            throw new SequelizeValidationError(
-              'Failed to enforce letters or numbers'
-            );
-        })
-        .catch(e => {
-          expect(e).toBeInstanceOf(SequelizeValidationError);
-          expect(e.message).toContain(
-            'Validation error: Username must consist of letters or numbers'
-          );
-        });
-    });
-
-    test('Passwords must be at least 6 characters long, lowercase/uppercase letters, at least 1 number', async () => {
-      newUser.password = '123i';
 
       let result, error;
       try {
@@ -101,12 +42,82 @@ describe('User model tests', () => {
         error = err;
       }
 
-      if (result) throw Error('Failed to enforce password requirements');
+      if (result) throw Error('Failed to enforce notEmpty validation');
+
+      expect(error).toBeInstanceOf(SequelizeValidationError);
+      expect(error.message).toContain('notNull Violation');
+    });
+
+    test('fields cannot be empty: `username`, `displayName`, `password`', async () => {
+      newUser.username = '';
+      newUser.displayName = '';
+      newUser.password = '';
+
+      let result, error;
+      try {
+        result = await newUser.validate();
+      } catch (err) {
+        error = err;
+      }
+
+      if (result) throw Error('Failed to enforce notEmpty validation');
+
+      // console.log('--------  ', error);
+      expect(error).toBeInstanceOf(SequelizeValidationError);
+      expect(error.message).toContain('Validation error');
+      // for (const e of error.errors) {
+      //   expect(e.validatorName).toBe('notEmpty');
+      // }
+    });
+  });
+
+  describe('Specific properties', () => {
+    test('Username must only consist of letters or numbers', async () => {
+      newUser.username = '_ubernoobie';
+
+      let result, error;
+
+      try {
+        result = await newUser.validate();
+      } catch (err) {
+        error = err;
+      }
+
+      if (result) throw Error('Failed to enforce letters or numbers');
 
       expect(error).toBeInstanceOf(SequelizeValidationError);
       expect(error.message).toContain(
-        'Validation error: Passwords must be at least 6 characters long, lowercase/uppercase letters, at least 1 number.'
+        'Validation error: Username must consist of letters or numbers.'
       );
+    });
+
+    test('Passwords must be at least 6 characters long, lowercase/uppercase letters, at least 1 number', done => {
+      newUser.password = '1Leei';
+
+      newUser
+        .validate()
+        .then(() => {
+          const e = Error('failed to enforce');
+          done(e);
+        })
+        .catch(err => {
+          expect(err.errors[0].validatorKey).toBe('is');
+          done();
+        });
+
+      // let result, error;
+      // try {
+      //   result = await newUser.validate();
+      // } catch (err) {
+      //   error = err;
+      // }
+
+      // if (result) throw Error('Failed to enforce password requirements');
+
+      // await expect(error).toBeInstanceOf(SequelizeValidationError);
+      // await expect(error.message).toContain(
+      //   'Validation error: Passwords must be at least 6 characters long, lowercase/uppercase letters, at least 1 number.'
+      // );
     });
   });
 });
