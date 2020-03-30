@@ -1,10 +1,11 @@
-const { User } = require('../../server/db/models');
-const syncAndSeed = require('../../server/db/seed');
-const sequelizeValidationError = require('sequelize').ValidationError;
+const User = require('../../server/db/models/User');
+// const syncAndSeed = require('../../server/db/seed');
+const db = require('../../server/db/db');
+const SequelizeValidationError = require('sequelize').ValidationError;
 
 describe('User model tests', () => {
   beforeEach(() => {
-    return syncAndSeed();
+    return db.sync({ force: true });
   });
 
   let newUser;
@@ -16,34 +17,96 @@ describe('User model tests', () => {
     });
   });
 
-  // afterEach(() => {
-  //   return Promise.all([
-  //     // Article.truncate({ cascade: true }),
-  //     User.truncate({ cascade: true })
-  //   ]);
-  // });
-
-  test('it is defined', () => {
-    return expect(newUser).toBeDefined();
+  afterEach(() => {
+    return Promise.all([User.truncate({ cascade: true })]);
   });
 
   describe('attributes definition', () => {
-    test('It has id, username, password, displayName, and isGroupAdmin fields', () => {
+    test('Includes `id`, `username`, `password`, `displayName`, and `isGroupAdmin` fields', () => {
+      // const savedUser = newUser.save();
+
       expect(newUser).toHaveProperty('id');
       expect(newUser).toHaveProperty('username');
       expect(newUser).toHaveProperty('password');
       expect(newUser).toHaveProperty('displayName');
       expect(newUser).toHaveProperty('isGroupAdmin');
     });
-  });
 
-  describe('username properties', () => {
-    test('username is set to lowercase', () => {
-      newUser.username = 'UBERn00bi3';
+    test('Requires `username`, `displayName`, `password` ', () => {
+      newUser.username = null;
+      newUser.displayName = null;
+      newUser.password = null;
 
-      expect(newUser.username).toBe('ubern00bi3');
+      newUser
+        .validate()
+        .then(res => {
+          if (res)
+            throw new SequelizeValidationError(
+              'Validation should fail when fields are null, double check your model validation'
+            );
+        })
+        .catch(e => {
+          // console.log(e);
+          expect(e).toBeInstanceOf(SequelizeValidationError);
+        });
     });
 
-    test('Validates that it must be letters and numbers', () => {});
+    test('fields cannot be empty: `username`, `displayName`, `password`', () => {
+      newUser.username = '';
+      newUser.displayName = '';
+      newUser.password = '';
+
+      newUser
+        .validate()
+        .then(res => {
+          if (res)
+            throw new SequelizeValidationError(
+              'Validation should fail when fields are null, double check your model validation'
+            );
+        })
+        .catch(e => {
+          // console.log(e);
+          expect(e).toBeInstanceOf(SequelizeValidationError);
+        });
+    });
+  });
+
+  describe('Specific properties', () => {
+    test('Username must only consist of letters or numbers', () => {
+      newUser.username = '_ubernoobie';
+
+      newUser
+        .validate()
+        .then(res => {
+          if (res)
+            throw new SequelizeValidationError(
+              'Failed to enforce letters or numbers'
+            );
+        })
+        .catch(e => {
+          expect(e).toBeInstanceOf(SequelizeValidationError);
+          expect(e.message).toContain(
+            'Validation error: Username must consist of letters or numbers'
+          );
+        });
+    });
+
+    test('Passwords must be at least 6 characters long, lowercase/uppercase letters, at least 1 number', async () => {
+      newUser.password = '123i';
+
+      let result, error;
+      try {
+        result = await newUser.validate();
+      } catch (err) {
+        error = err;
+      }
+
+      if (result) throw Error('Failed to enforce password requirements');
+
+      expect(error).toBeInstanceOf(SequelizeValidationError);
+      expect(error.message).toContain(
+        'Validation error: Passwords must be at least 6 characters long, lowercase/uppercase letters, at least 1 number.'
+      );
+    });
   });
 });

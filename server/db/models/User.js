@@ -19,9 +19,6 @@ const User = db.define(
       type: Sequelize.STRING,
       unique: true,
       allowNull: false,
-      set(val) {
-        this.setDataValue('username', val.toLowerCase());
-      },
       validate: {
         notNull: {
           msg: 'Username required'
@@ -29,7 +26,7 @@ const User = db.define(
         notEmpty: true,
         isAlphanumeric: {
           args: true,
-          msg: 'Username must consist of letters and numbers'
+          msg: 'Username must consist of letters or numbers'
         }
       }
     },
@@ -87,21 +84,5 @@ const User = db.define(
     }
   }
 );
-
-User.prototype.changeUsername = function(oldUsername, newUsername) {
-  User.update(
-    { username: newUsername },
-    {
-      where: {
-        username: oldUsername
-      }
-    }
-  )
-    .then(user => user)
-    .catch(err => {
-      console.log(err);
-      return err;
-    });
-};
 
 module.exports = User;

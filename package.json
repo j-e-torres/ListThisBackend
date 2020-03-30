@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node server/",
     "start:dev": "nodemon server/ --ignore tests/",
-    "modelTest": "DATABASE_URL=postgres://localhost/listthisdb jest ./tests/modelsTest/*.spec.js --watch"
+    "modelTest": "DATABASE_URL=postgres://localhost/listthisdbtest jest ./tests/modelsTest/*.spec.js --watch --runInBand --verbose"
   },
   "author": "",
   "license": "ISC",
