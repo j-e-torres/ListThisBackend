@@ -5,6 +5,14 @@ const { Sequelize } = db;
 //   '^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{6,})'
 // );
 
+// const UsernameConst = 'Username'
+// const PasswordConst = 'Password'
+// const DisplayNameConst = 'Display name'
+
+// const notNullMsg = 'required.'
+// const notEmptyMsg = 'cannot be empty.';
+// const isAlphanumericMsg = 'must consist of letters or numbers.';
+
 const User = db.define(
   'user',
   {
@@ -23,7 +31,10 @@ const User = db.define(
         notNull: {
           msg: 'Username required'
         },
-        notEmpty: true,
+        notEmpty: {
+          args: true,
+          msg: 'Username cannot be empty'
+        },
         isAlphanumeric: {
           args: true,
           msg: 'Username must consist of letters or numbers.'
@@ -38,20 +49,15 @@ const User = db.define(
         notNull: {
           msg: 'Password required'
         },
-        notEmpty: true,
+        notEmpty: {
+          args: true,
+          msg: 'Password cannot be empty'
+        },
         is: {
           args: '^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{6,})',
           msg:
             'Passwords must be at least 6 characters long, lowercase/uppercase letters, at least 1 number.'
         }
-        // passwordTest(password) {
-        //   if (passwordStrength.test(password)) {
-        //     console.log('error thrown on password');
-        //     throw new Error(
-        //       'Passwords must be at least 6 characters long, lowercase/uppercase letters, at least 1 number.'
-        //     );
-        //   }
-        // }
       }
     },
 
@@ -62,7 +68,10 @@ const User = db.define(
         notNull: {
           msg: 'Display name required'
         },
-        notEmpty: true
+        notEmpty: {
+          args: true,
+          msg: 'Display name cannot be empty'
+        }
         // isAlphanumeric: {
         //   args: true,
         //   msg: 'Display name must consist of letters and numbers'
