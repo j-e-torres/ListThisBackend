@@ -6,24 +6,26 @@ const Task = db.define('task', {
     type: Sequelize.UUID,
     allowNull: false,
     primaryKey: true,
-    defaultValue: Sequelize.UUIDV4
+    defaultValue: Sequelize.UUIDV4,
   },
 
   taskName: {
     type: Sequelize.STRING,
-    unique: true,
+    unique: {
+      args: true,
+      msg: 'Task name already in use!',
+    },
     allowNull: false,
     validate: {
       notNull: {
-        msg: 'Task name required'
+        msg: 'Task name required',
       },
-      notEmpty: true
-      // isAlphanumeric: {
-      //   args: true,
-      //   msg: 'Task name must consist of letters and numbers'
-      // }
-    }
-  }
+      notEmpty: {
+        args: true,
+        msg: 'Task name cannot be empty',
+      },
+    },
+  },
 });
 
 module.exports = Task;

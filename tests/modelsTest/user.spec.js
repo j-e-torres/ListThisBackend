@@ -5,7 +5,7 @@ const SequelizeValidationError = require('sequelize').ValidationError;
 const validationTester = require('../testHelperFunctions');
 
 describe('User model tests', () => {
-  beforeEach(() => {
+  beforeAll(() => {
     return db.sync({ force: true });
   });
 
@@ -14,7 +14,7 @@ describe('User model tests', () => {
     newUser = User.build({
       username: 'ubern00bi3',
       password: 'La1La1',
-      displayName: 'fishy'
+      displayName: 'fishy',
     });
   });
 
@@ -66,6 +66,28 @@ describe('User model tests', () => {
           'Username must consist of letters or numbers.'
         );
       });
+
+      test('username must be unique', async () => {
+        let error;
+        try {
+          await newUser.save();
+          newerUser = Group.build({
+            groupName: 'family',
+          });
+          await newerUser.save();
+        } catch (err) {
+          error = err;
+        }
+
+        if (error) {
+          const notEmptyError = error.errors.find(
+            (e) => e.validatorKey === 'not_unique'
+          );
+
+          if (notEmptyError)
+            expect(notEmptyError.message).toBe('username already in use!');
+        } else throw Error('username validation failed');
+      });
     });
 
     describe('Password property', () => {
@@ -104,10 +126,10 @@ describe('User model tests', () => {
 
       test('Password is not sent in a get request', () => {
         User.findOne()
-          .then(user => {
+          .then((user) => {
             expect(user.password).toBe(null);
           })
-          .catch(e => e);
+          .catch((e) => e);
       });
     });
 

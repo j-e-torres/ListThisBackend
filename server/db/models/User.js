@@ -1,18 +1,6 @@
 const db = require('../db');
 const { Sequelize } = db;
 
-// const passwordStrength = new RegExp(
-//   '^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{6,})'
-// );
-
-// const UsernameConst = 'Username'
-// const PasswordConst = 'Password'
-// const DisplayNameConst = 'Display name'
-
-// const notNullMsg = 'required.'
-// const notEmptyMsg = 'cannot be empty.';
-// const isAlphanumericMsg = 'must consist of letters or numbers.';
-
 const User = db.define(
   'user',
   {
@@ -20,26 +8,29 @@ const User = db.define(
       type: Sequelize.UUID,
       allowNull: false,
       primaryKey: true,
-      defaultValue: Sequelize.UUIDV4
+      defaultValue: Sequelize.UUIDV4,
     },
 
     username: {
       type: Sequelize.STRING,
-      unique: true,
+      unique: {
+        args: true,
+        msg: 'username already in use!',
+      },
       allowNull: false,
       validate: {
         notNull: {
-          msg: 'Username required'
+          msg: 'Username required',
         },
         notEmpty: {
           args: true,
-          msg: 'Username cannot be empty'
+          msg: 'Username cannot be empty',
         },
         isAlphanumeric: {
           args: true,
-          msg: 'Username must consist of letters or numbers.'
-        }
-      }
+          msg: 'Username must consist of letters or numbers.',
+        },
+      },
     },
 
     password: {
@@ -47,18 +38,18 @@ const User = db.define(
       allowNull: false,
       validate: {
         notNull: {
-          msg: 'Password required'
+          msg: 'Password required',
         },
         notEmpty: {
           args: true,
-          msg: 'Password cannot be empty'
+          msg: 'Password cannot be empty',
         },
         is: {
           args: '^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{6,})',
           msg:
-            'Passwords must be at least 6 characters long, lowercase/uppercase letters, at least 1 number.'
-        }
-      }
+            'Passwords must be at least 6 characters long, lowercase/uppercase letters, at least 1 number.',
+        },
+      },
     },
 
     displayName: {
@@ -66,31 +57,31 @@ const User = db.define(
       allowNull: false,
       validate: {
         notNull: {
-          msg: 'Display name required'
+          msg: 'Display name required',
         },
         notEmpty: {
           args: true,
-          msg: 'Display name cannot be empty'
-        }
+          msg: 'Display name cannot be empty',
+        },
         // isAlphanumeric: {
         //   args: true,
         //   msg: 'Display name must consist of letters and numbers'
         // }
-      }
+      },
     },
 
     isGroupAdmin: {
       type: Sequelize.BOOLEAN,
-      defaultValue: false
-    }
+      defaultValue: false,
+    },
   },
 
   {
     defaultScope: {
       attributes: {
-        exclude: ['password']
-      }
-    }
+        exclude: ['password'],
+      },
+    },
   }
 );
 

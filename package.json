@@ -6,7 +6,10 @@
   "scripts": {
     "start": "node server/",
     "start:dev": "nodemon server/ --ignore tests/",
-    "modelTest": "DATABASE_URL=postgres://localhost/listthisdbtest jest ./tests/modelsTest/*.spec.js --watch --runInBand --verbose"
+    "userModelTest": "DATABASE_URL=postgres://localhost/listthisdbtest jest ./tests/modelsTest/user.spec.js --watch --runInBand --verbose",
+    "groupModelTest": "DATABASE_URL=postgres://localhost/listthisdbtest jest ./tests/modelsTest/group.spec.js --watch --runInBand --verbose",
+    "listModelTest": "DATABASE_URL=postgres://localhost/listthisdbtest jest ./tests/modelsTest/list.spec.js --watch --runInBand --verbose",
+    "taskModelTest": "DATABASE_URL=postgres://localhost/listthisdbtest jest ./tests/modelsTest/task.spec.js --watch --runInBand --verbose"
   },
   "author": "",
   "license": "ISC",
@@ -16,6 +19,7 @@
     "sequelize": "^5.21.5"
   },
   "devDependencies": {
+    "eslint-plugin-jest": "^23.8.2",
     "faker": "^4.1.0",
     "jest": "^25.2.3",
     "nodemon": "^2.0.2"

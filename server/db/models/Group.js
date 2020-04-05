@@ -6,24 +6,26 @@ const Group = db.define('group', {
     type: Sequelize.UUID,
     allowNull: false,
     primaryKey: true,
-    defaultValue: Sequelize.UUIDV4
+    defaultValue: Sequelize.UUIDV4,
   },
 
   groupName: {
     type: Sequelize.STRING,
-    unique: true,
+    unique: {
+      args: true,
+      msg: 'Group name already in use!',
+    },
     allowNull: false,
     validate: {
       notNull: {
-        msg: 'Group name required'
+        msg: 'Group name required',
       },
-      notEmpty: true
-      // isAlphanumeric: {
-      //   args: true,
-      //   msg: 'Group name must consist of letters and numbers'
-      // }
-    }
-  }
+      notEmpty: {
+        args: true,
+        msg: 'Group name cannot be empty',
+      },
+    },
+  },
 });
 
 module.exports = Group;

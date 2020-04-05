@@ -6,24 +6,26 @@ const List = db.define('list', {
     type: Sequelize.UUID,
     allowNull: false,
     primaryKey: true,
-    defaultValue: Sequelize.UUIDV4
+    defaultValue: Sequelize.UUIDV4,
   },
 
   listName: {
     type: Sequelize.STRING,
-    unique: true,
+    unique: {
+      args: true,
+      msg: 'List name already in use!',
+    },
     allowNull: false,
     validate: {
       notNull: {
-        msg: 'List name required'
+        msg: 'List name required',
       },
-      notEmpty: true
-      // isAlphanumeric: {
-      //   args: true,
-      //   msg: 'List name must consist of letters and numbers'
-      // }
-    }
-  }
+      notEmpty: {
+        args: true,
+        msg: 'List name cannot be empty',
+      },
+    },
+  },
 });
 
 module.exports = List;

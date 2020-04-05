@@ -2,7 +2,7 @@ const validationTester = async (
   modelBuild,
   modelProperty,
   modelPropertyAssignment,
-  errorString,
+  customErrorString,
   validatorKeyInput,
   expectedErrorMessage
 ) => {
@@ -16,13 +16,14 @@ const validationTester = async (
     error = err;
   }
 
-  if (result) throw Error(`${errorString} validation failed.`);
+  // console.log('----------', error);
+
+  if (result) throw Error(`${customErrorString} validation failed.`);
 
   const notEmptyError = error.errors.find(
-    e => e.validatorKey === validatorKeyInput
+    (e) => e.validatorKey === validatorKeyInput
   );
 
-  // if (modelPropertyAssignment === null) console.log(error);
   if (notEmptyError) expect(notEmptyError.message).toBe(expectedErrorMessage);
   else throw Error(`${errorString} validation failed.`);
 };
