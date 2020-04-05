@@ -71,8 +71,8 @@ describe('User model tests', () => {
         let error;
         try {
           await newUser.save();
-          newerUser = Group.build({
-            groupName: 'family',
+          newerUser = User.build({
+            username: 'family',
           });
           await newerUser.save();
         } catch (err) {
@@ -131,6 +131,11 @@ describe('User model tests', () => {
           })
           .catch((e) => e);
       });
+
+      test('Password is hashed', async () => {
+        await newUser.save();
+        await expect(newUser.password).not.toBe('La1La1');
+      });
     });
 
     describe('displayName Property', () => {
@@ -155,6 +160,67 @@ describe('User model tests', () => {
           'Display name cannot be empty'
         );
       });
+    });
+  });
+
+  describe('User model functions', () => {
+    test('User is authenticated and logs in with correct credentials', async () => {
+      await newUser.save();
+
+      const credentials = {
+        username: 'UBERn00bi3',
+        password: 'La1La1',
+      };
+
+      const authenticatedUser = await User.authenticate(credentials);
+
+      await expect(authenticatedUser.username).toBe('ubern00bi3');
+    });
+
+    test('User cannot be authenticated and log in with incorrect username', async () => {
+      await newUser.save();
+
+      const credentials = {
+        username: 'UBERn0bi3',
+        password: 'La1La1',
+      };
+
+      let authenticatedUser, error;
+
+      try {
+        authenticatedUser = await User.authenticate(credentials);
+      } catch (err) {
+        error = err;
+      }
+
+      if (authenticatedUser)
+        throw Error('Error: User was able to log in with incorrect username');
+
+      await expect(error.message).toBe('Username or password is invalid');
+      await expect(error.status).toBe(401);
+    });
+
+    test('User cannot be authenticated and log in with incorrect password', async () => {
+      await newUser.save();
+
+      const credentials = {
+        username: 'UBERn00bi3',
+        password: 'La1La1e',
+      };
+
+      let authenticatedUser, error;
+
+      try {
+        authenticatedUser = await User.authenticate(credentials);
+      } catch (err) {
+        error = err;
+      }
+
+      if (authenticatedUser)
+        throw Error('Error: User was able to log in with incorrect password');
+
+      await expect(error.message).toBe('Username or password is invalid');
+      await expect(error.status).toBe(401);
     });
   });
 });

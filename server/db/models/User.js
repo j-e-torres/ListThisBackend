@@ -1,5 +1,6 @@
 const db = require('../db');
 const { Sequelize } = db;
+const bcrypt = require('bcrypt');
 
 const User = db.define(
   'user',
@@ -82,7 +83,50 @@ const User = db.define(
         exclude: ['password'],
       },
     },
+
+    hooks: {
+      beforeSave: function (user) {
+        if (user.password) {
+          return bcrypt
+            .hash(user.password, 5)
+            .then((hash) => {
+              user.password = hash;
+              user.username = user.username.toLowerCase();
+              // return user;
+            })
+            .catch((err) => console.error(err));
+        }
+      },
+    },
+
+    scopes: {
+      login: {},
+    },
   }
 );
+
+User.authenticate = function ({ username, password }) {
+  username = username.toLowerCase();
+
+  let _user;
+  return this.scope('login')
+    .findOne({ where: { username } })
+    .then((user) => {
+      if (!user) {
+        const error = new Error('Username or password is invalid');
+        error.status = 401;
+        throw error;
+      }
+      _user = user;
+
+      return bcrypt.compare(password, user.password);
+    })
+    .then((authenticated) => {
+      if (authenticated) return _user;
+      const error = new Error('Username or password is invalid');
+      error.status = 401;
+      throw error;
+    });
+};
 
 module.exports = User;
