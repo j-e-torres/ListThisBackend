@@ -222,5 +222,21 @@ describe('User model tests', () => {
       await expect(error.message).toBe('Username or password is invalid');
       await expect(error.status).toBe(401);
     });
+
+    test('User can sign up and create an account', () => {
+      const signUpCredentials = {
+        username: 'princess',
+        password: 'La1La1e',
+        displayName: 'coolman',
+      };
+
+      return User.signUp(signUpCredentials)
+        .then((user) => expect(user.username).toBe('princess'))
+        .catch((e) => {
+          throw Error(
+            `Error: User unable to sign up for following reasons: ${e.message}`
+          );
+        });
+    });
   });
 });

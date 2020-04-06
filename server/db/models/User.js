@@ -129,4 +129,14 @@ User.authenticate = function ({ username, password }) {
     });
 };
 
+User.signUp = function ({ username, password, displayName }) {
+  return User.create({ username, password, displayName })
+    .then((user) => {
+      return user;
+    })
+    .catch((e) => {
+      throw e;
+    });
+};
+
 module.exports = User;
