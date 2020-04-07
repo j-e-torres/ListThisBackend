@@ -11,10 +11,6 @@ const Task = db.define('task', {
 
   taskName: {
     type: Sequelize.STRING,
-    unique: {
-      args: true,
-      msg: 'Task name already in use!',
-    },
     allowNull: false,
     validate: {
       notNull: {
@@ -26,6 +22,16 @@ const Task = db.define('task', {
       },
     },
   },
+
+  completed: {
+    type: Sequelize.BOOLEAN,
+    defaultValue: false,
+  },
 });
+
+// instance methods
+Task.prototype.completeTask = function (task) {
+  return task.update({ completed: true });
+};
 
 module.exports = Task;

@@ -39,4 +39,11 @@ const List = db.define('list', {
   },
 });
 
+// instance methods
+List.prototype.createNewTask = function (task) {
+  return this.createTask(task).catch((e) => {
+    throw e;
+  });
+};
+
 module.exports = List;

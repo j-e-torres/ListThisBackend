@@ -138,6 +138,12 @@ User.signUp = function ({ username, password, displayName }) {
 };
 
 // instance methods
+User.prototype.createNewGroup = function (group) {
+  return this.createGroup(group).catch((e) => {
+    throw e;
+  });
+};
+
 User.prototype.addUserToGroup = function (username, group) {
   if (this.isGroupAdmin) {
     return User.findOne({ where: { username } }).then((user) =>

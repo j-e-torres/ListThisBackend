@@ -9,7 +9,8 @@
     "userModelTest": "DATABASE_URL=postgres://localhost/listthisdbtest jest ./tests/modelsTest/user.spec.js --watch --runInBand --verbose",
     "groupModelTest": "DATABASE_URL=postgres://localhost/listthisdbtest jest ./tests/modelsTest/group.spec.js --watch --runInBand --verbose",
     "listModelTest": "DATABASE_URL=postgres://localhost/listthisdbtest jest ./tests/modelsTest/list.spec.js --watch --runInBand --verbose",
-    "taskModelTest": "DATABASE_URL=postgres://localhost/listthisdbtest jest ./tests/modelsTest/task.spec.js --watch --runInBand --verbose"
+    "taskModelTest": "DATABASE_URL=postgres://localhost/listthisdbtest jest ./tests/modelsTest/task.spec.js --watch --runInBand --verbose",
+    "test": "DATABASE_URL=postgres://localhost/listthisdbtest jest ./tests/modelsTest/*.spec.js --watch --runInBand --verbose"
   },
   "author": "",
   "license": "ISC",

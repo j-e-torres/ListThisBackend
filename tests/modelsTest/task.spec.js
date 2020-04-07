@@ -28,6 +28,7 @@ describe('Task model test', () => {
     test('Includes `id`, `taskName` fields', () => {
       expect(newTask).toHaveProperty('id');
       expect(newTask).toHaveProperty('taskName');
+      expect(newTask).toHaveProperty('completed');
     });
   });
 
@@ -56,26 +57,43 @@ describe('Task model test', () => {
       );
     });
 
-    test('taskName must be unique', async () => {
-      let error;
-      try {
-        await newTask.save();
-        newerTask = Task.build({
-          taskName: 'eggs',
-        });
-        await newerTask.save();
-      } catch (err) {
-        error = err;
-      }
-
-      if (error) {
-        const notEmptyError = error.errors.find(
-          (e) => e.validatorKey === 'not_unique'
-        );
-
-        if (notEmptyError)
-          expect(notEmptyError.message).toBe('Task name already in use!');
-      } else throw Error('taskName validation failed');
+    describe('task model functions', () => {
+      test('Task can be completed', () => {
+        return newTask
+          .save()
+          .then((task) => {
+            return task.completeTask(task);
+          })
+          .then((_task) => {
+            console.log('111111', _task);
+            return expect(newTask.completed).toBe(true);
+          })
+          .catch((e) => {
+            throw Error(`Task could not be completed due to: ${e.message}`);
+          });
+      });
     });
+
+    // test('taskName must be unique', async () => {
+    //   let error;
+    //   try {
+    //     await newTask.save();
+    //     newerTask = Task.build({
+    //       taskName: 'eggs',
+    //     });
+    //     await newerTask.save();
+    //   } catch (err) {
+    //     error = err;
+    //   }
+
+    //   if (error) {
+    //     const notEmptyError = error.errors.find(
+    //       (e) => e.validatorKey === 'not_unique'
+    //     );
+
+    //     if (notEmptyError)
+    //       expect(notEmptyError.message).toBe('Task name already in use!');
+    //   } else throw Error('taskName validation failed');
+    // });
   });
 });

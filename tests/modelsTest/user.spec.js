@@ -240,6 +240,34 @@ describe('User model tests', () => {
         });
     });
 
+    test('User can create a group', () => {
+      const createGroup = {
+        groupName: 'family',
+      };
+
+      return newUser
+        .save()
+        .then((_user) => {
+          return _user.createNewGroup(createGroup);
+        })
+        .then((group) => {
+          return Group.findByPk(group.id, {
+            include: [
+              {
+                model: User,
+                where: { id: newUser.id },
+              },
+            ],
+          });
+        })
+        .then((foundGroup) => {
+          return expect(foundGroup.users[0].username).toBe(newUser.username);
+        })
+        .catch((e) => {
+          throw Error(`Creating a group failed due to: ${e.message}`);
+        });
+    });
+
     test('User group admin can add a user to a group', () => {
       const newGroup = Group.build({
         groupName: 'family',
@@ -263,13 +291,13 @@ describe('User model tests', () => {
             include: [
               {
                 model: Group,
-                where: { groupName: 'family' },
+                where: { id: newGroup.id },
               },
             ],
           });
         })
         .then((foundUser) => {
-          return expect(foundUser.groups[0].groupName).toBe('family');
+          return expect(foundUser.groups[0].id).toBe(newGroup.id);
         })
         .catch((e) => {
           throw Error(`Adding user to group failed: ${e.message}`);

@@ -55,27 +55,27 @@ describe('Group Model Tests', () => {
         );
       });
 
-      test('groupName must be unique', async () => {
-        let error;
-        try {
-          await newGroup.save();
-          newerGroup = Group.build({
-            groupName: 'family',
-          });
-          await newerGroup.save();
-        } catch (err) {
-          error = err;
-        }
+      // test('groupName must be unique', async () => {
+      //   let error;
+      //   try {
+      //     await newGroup.save();
+      //     newerGroup = Group.build({
+      //       groupName: 'family',
+      //     });
+      //     await newerGroup.save();
+      //   } catch (err) {
+      //     error = err;
+      //   }
 
-        if (error) {
-          const notEmptyError = error.errors.find(
-            (e) => e.validatorKey === 'not_unique'
-          );
+      //   if (error) {
+      //     const notEmptyError = error.errors.find(
+      //       (e) => e.validatorKey === 'not_unique'
+      //     );
 
-          if (notEmptyError)
-            expect(notEmptyError.message).toBe('Group name already in use!');
-        } else throw Error('groupName validation failed');
-      });
+      //     if (notEmptyError)
+      //       expect(notEmptyError.message).toBe('Group name already in use!');
+      //   } else throw Error('groupName validation failed');
+      // });
     });
   });
 
@@ -89,9 +89,6 @@ describe('Group Model Tests', () => {
         .save()
         .then((group) => {
           return group.createListToGroup(newList);
-        })
-        .then(() => {
-          return List.findOne({ where: { groupId: newGroup.id } });
         })
         .then((_list) => {
           return expect(_list.groupId).toBe(newGroup.id);
