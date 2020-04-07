@@ -1,4 +1,4 @@
-const User = require('../../server/db/models/User');
+const { User, Group, List } = require('../../server/db/models/');
 const db = require('../../server/db/db');
 const SequelizeValidationError = require('sequelize').ValidationError;
 
@@ -15,6 +15,7 @@ describe('User model tests', () => {
       username: 'ubern00bi3',
       password: 'La1La1',
       displayName: 'fishy',
+      isGroupAdmin: true,
     });
   });
 
@@ -236,6 +237,42 @@ describe('User model tests', () => {
           throw Error(
             `Error: User unable to sign up for following reasons: ${e.message}`
           );
+        });
+    });
+
+    test('User group admin can add a user to a group', () => {
+      const newGroup = Group.build({
+        groupName: 'family',
+      });
+
+      const newerUser = User.build({
+        username: 'fishlady',
+        password: 'La1La1',
+        displayName: 'fishyladybitch',
+      });
+      newerUser.save();
+      newGroup.save();
+
+      return newUser
+        .save()
+        .then((_newUser) => {
+          return _newUser.addUserToGroup(newerUser.username, newGroup);
+        })
+        .then(() => {
+          return User.findByPk(newerUser.id, {
+            include: [
+              {
+                model: Group,
+                where: { groupName: 'family' },
+              },
+            ],
+          });
+        })
+        .then((foundUser) => {
+          return expect(foundUser.groups[0].groupName).toBe('family');
+        })
+        .catch((e) => {
+          throw Error(`Adding user to group failed: ${e.message}`);
         });
     });
   });

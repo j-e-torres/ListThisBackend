@@ -1,5 +1,6 @@
 const db = require('../db');
 const { Sequelize } = db;
+const List = require('./List');
 
 const Group = db.define('group', {
   id: {
@@ -27,5 +28,13 @@ const Group = db.define('group', {
     },
   },
 });
+
+// instance methods
+
+Group.prototype.createListToGroup = function (newList) {
+  return this.createList(newList).catch((e) => {
+    throw e;
+  });
+};
 
 module.exports = Group;

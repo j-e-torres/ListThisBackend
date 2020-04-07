@@ -11,10 +11,10 @@ const List = db.define('list', {
 
   listName: {
     type: Sequelize.STRING,
-    unique: {
-      args: true,
-      msg: 'List name already in use!',
-    },
+    // unique: {
+    //   args: true,
+    //   msg: 'List name already in use!',
+    // },
     allowNull: false,
     validate: {
       notNull: {
@@ -23,6 +23,17 @@ const List = db.define('list', {
       notEmpty: {
         args: true,
         msg: 'List name cannot be empty',
+      },
+    },
+  },
+
+  listNotes: {
+    type: Sequelize.TEXT,
+    allowNull: false,
+    defaultValue: '',
+    validate: {
+      notNull: {
+        msg: 'invalid value for notes',
       },
     },
   },

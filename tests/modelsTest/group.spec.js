@@ -1,4 +1,4 @@
-const { Group } = require('../../server/db/models/');
+const { Group, List } = require('../../server/db/models/');
 const db = require('../../server/db/db');
 const SequelizeValidationError = require('sequelize').ValidationError;
 
@@ -76,6 +76,29 @@ describe('Group Model Tests', () => {
             expect(notEmptyError.message).toBe('Group name already in use!');
         } else throw Error('groupName validation failed');
       });
+    });
+  });
+
+  describe('group model functions', () => {
+    test('new list can be added to current group', () => {
+      const newList = {
+        listName: 'trader joes',
+      };
+
+      return newGroup
+        .save()
+        .then((group) => {
+          return group.createListToGroup(newList);
+        })
+        .then(() => {
+          return List.findOne({ where: { groupId: newGroup.id } });
+        })
+        .then((_list) => {
+          return expect(_list.groupId).toBe(newGroup.id);
+        })
+        .catch((e) => {
+          throw Error(`Adding user to group failed: ${e.message}`);
+        });
     });
   });
 });

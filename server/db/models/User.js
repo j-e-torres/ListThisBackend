@@ -64,10 +64,6 @@ const User = db.define(
           args: true,
           msg: 'Display name cannot be empty',
         },
-        // isAlphanumeric: {
-        //   args: true,
-        //   msg: 'Display name must consist of letters and numbers'
-        // }
       },
     },
 
@@ -105,6 +101,8 @@ const User = db.define(
   }
 );
 
+// class methods
+
 User.authenticate = function ({ username, password }) {
   username = username.toLowerCase();
 
@@ -137,6 +135,17 @@ User.signUp = function ({ username, password, displayName }) {
     .catch((e) => {
       throw e;
     });
+};
+
+// instance methods
+User.prototype.addUserToGroup = function (username, group) {
+  if (this.isGroupAdmin) {
+    return User.findOne({ where: { username } }).then((user) =>
+      user.addGroup(group)
+    );
+  } else {
+    throw new Error('User is not a group owner');
+  }
 };
 
 module.exports = User;

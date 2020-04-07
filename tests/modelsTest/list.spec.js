@@ -28,6 +28,7 @@ describe('List model tests', () => {
     test('Includes `id`, `listName` fields', () => {
       expect(newList).toHaveProperty('id');
       expect(newList).toHaveProperty('listName');
+      expect(newList).toHaveProperty('listNotes');
     });
   });
 
