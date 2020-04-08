@@ -65,7 +65,6 @@ describe('Task model test', () => {
             return task.completeTask(task);
           })
           .then((_task) => {
-            console.log('111111', _task);
             return expect(newTask.completed).toBe(true);
           })
           .catch((e) => {
