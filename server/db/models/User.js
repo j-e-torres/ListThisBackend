@@ -1,6 +1,7 @@
 const db = require('../db');
 const { Sequelize } = db;
 const bcrypt = require('bcrypt');
+const Group = require('./Group');
 
 const User = db.define(
   'user',
@@ -67,10 +68,10 @@ const User = db.define(
       },
     },
 
-    isGroupAdmin: {
-      type: Sequelize.BOOLEAN,
-      defaultValue: false,
-    },
+    // isGroupAdmin: {
+    //   type: Sequelize.BOOLEAN,
+    //   defaultValue: false,
+    // },
   },
 
   {
@@ -139,16 +140,20 @@ User.signUp = function ({ username, password, displayName }) {
 
 // instance methods
 User.prototype.createNewGroup = function (group) {
-  return this.createGroup(group).catch((e) => {
-    throw e;
-  });
+  return this.createGroup(group)
+    .then((_group) => {
+      return _group.update({ groupOwner: this.username });
+    })
+    .catch((e) => {
+      throw e;
+    });
 };
 
-User.prototype.addUserToGroup = function (username, group) {
-  if (this.isGroupAdmin) {
-    return User.findOne({ where: { username } }).then((user) =>
-      user.addGroup(group)
-    );
+User.prototype.addUserToGroup = function (user, group) {
+  if (group.groupOwner === this.username) {
+    return User.findByPk(user.id).then((_user) => {
+      return _user.addGroup(group);
+    });
   } else {
     throw new Error('User is not a group owner');
   }

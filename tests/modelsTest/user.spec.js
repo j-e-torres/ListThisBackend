@@ -29,7 +29,7 @@ describe('User model tests', () => {
       expect(newUser).toHaveProperty('username');
       expect(newUser).toHaveProperty('password');
       expect(newUser).toHaveProperty('displayName');
-      expect(newUser).toHaveProperty('isGroupAdmin');
+      // expect(newUser).toHaveProperty('isGroupAdmin');
     });
   });
 
@@ -240,7 +240,7 @@ describe('User model tests', () => {
         });
     });
 
-    test('User can create a group', () => {
+    test('User can create a group and become group admin', () => {
       const createGroup = {
         groupName: 'family',
       };
@@ -261,7 +261,10 @@ describe('User model tests', () => {
           });
         })
         .then((foundGroup) => {
-          return expect(foundGroup.users[0].username).toBe(newUser.username);
+          return Promise.all([
+            expect(foundGroup.users[0].username).toBe(newUser.username),
+            expect(foundGroup.groupOwner).toBe(newUser.username),
+          ]);
         })
         .catch((e) => {
           throw Error(`Creating a group failed due to: ${e.message}`);
@@ -271,6 +274,7 @@ describe('User model tests', () => {
     test('User group admin can add a user to a group', () => {
       const newGroup = Group.build({
         groupName: 'family',
+        groupOwner: 'ubern00bi3',
       });
 
       const newerUser = User.build({
@@ -284,9 +288,9 @@ describe('User model tests', () => {
       return newUser
         .save()
         .then((_newUser) => {
-          return _newUser.addUserToGroup(newerUser.username, newGroup);
+          return _newUser.addUserToGroup(newerUser, newGroup);
         })
-        .then(() => {
+        .then((stuff) => {
           return User.findByPk(newerUser.id, {
             include: [
               {
@@ -297,7 +301,9 @@ describe('User model tests', () => {
           });
         })
         .then((foundUser) => {
-          return expect(foundUser.groups[0].id).toBe(newGroup.id);
+          return Promise.all([
+            expect(foundUser.groups[0].id).toBe(newGroup.id),
+          ]);
         })
         .catch((e) => {
           throw Error(`Adding user to group failed: ${e.message}`);

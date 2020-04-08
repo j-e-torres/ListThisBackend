@@ -27,6 +27,10 @@ const Group = db.define('group', {
       },
     },
   },
+
+  groupOwner: {
+    type: Sequelize.STRING,
+  },
 });
 
 // instance methods

@@ -65,7 +65,7 @@ describe('Task model test', () => {
             return task.completeTask(task);
           })
           .then((_task) => {
-            return expect(newTask.completed).toBe(true);
+            return expect(_task.completed).toBe(true);
           })
           .catch((e) => {
             throw Error(`Task could not be completed due to: ${e.message}`);

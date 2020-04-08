@@ -28,6 +28,7 @@ describe('Group Model Tests', () => {
     test('Includes `id`, `groupName` fields', () => {
       expect(newGroup).toHaveProperty('id');
       expect(newGroup).toHaveProperty('groupName');
+      expect(newGroup).toHaveProperty('groupOwner');
     });
   });
 

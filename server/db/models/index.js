@@ -4,10 +4,10 @@ const Task = require('./Task');
 const User = require('./User');
 
 User.belongsToMany(Group, {
-  through: 'usergroup'
+  through: 'usergroup',
 });
 Group.belongsToMany(User, {
-  through: 'usergroup'
+  through: 'usergroup',
 });
 
 Group.hasMany(List);
@@ -20,5 +20,5 @@ module.exports = {
   Group,
   List,
   Task,
-  User
+  User,
 };
