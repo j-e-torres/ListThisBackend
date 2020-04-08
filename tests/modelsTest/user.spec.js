@@ -282,15 +282,12 @@ describe('User model tests', () => {
         password: 'La1La1',
         displayName: 'fishyladybitch',
       });
-      newerUser.save();
-      newGroup.save();
 
-      return newUser
-        .save()
-        .then((_newUser) => {
+      return Promise.all([newerUser.save(), newGroup.save(), newUser.save()])
+        .then(([_newerUser, _newGroup, _newUser]) => {
           return _newUser.addUserToGroup(newerUser, newGroup);
         })
-        .then((stuff) => {
+        .then(() => {
           return User.findByPk(newerUser.id, {
             include: [
               {
