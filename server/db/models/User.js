@@ -1,7 +1,8 @@
 const db = require('../db');
 const { Sequelize } = db;
 const bcrypt = require('bcrypt');
-const Group = require('./Group');
+const jwt = require('jwt-simple');
+const config = require('../../../config');
 
 const User = db.define(
   'user',
@@ -121,7 +122,10 @@ User.authenticate = function ({ username, password }) {
       return bcrypt.compare(password, user.password);
     })
     .then((authenticated) => {
-      if (authenticated) return _user;
+      // if (authenticated) return _user;
+      if (authenticated)
+        return jwt.encode({ id: _user.id }, config.get('JWT_ACCESS_TOKEN'));
+
       const error = new Error('Username or password is invalid');
       error.status = 401;
       throw error;

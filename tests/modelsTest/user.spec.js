@@ -1,6 +1,7 @@
-const { User, Group, List } = require('../../server/db/models/');
+const { User, Group } = require('../../server/db/models/');
 const db = require('../../server/db/db');
-const SequelizeValidationError = require('sequelize').ValidationError;
+const jwt = require('jwt-simple');
+const config = require('../../config');
 
 const validationTester = require('../testHelperFunctions');
 
@@ -15,7 +16,6 @@ describe('User model tests', () => {
       username: 'ubern00bi3',
       password: 'La1La1',
       displayName: 'fishy',
-      isGroupAdmin: true,
     });
   });
 
@@ -175,7 +175,9 @@ describe('User model tests', () => {
 
       const authenticatedUser = await User.authenticate(credentials);
 
-      await expect(authenticatedUser.username).toBe('ubern00bi3');
+      await expect(authenticatedUser).toBe(
+        jwt.encode({ id: newUser.id }, config.get('JWT_ACCESS_TOKEN'))
+      );
     });
 
     test('User cannot be authenticated and log in with incorrect username', async () => {
