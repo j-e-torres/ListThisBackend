@@ -2,7 +2,7 @@ const router = require('express').Router();
 
 router.use('/auth', require('./auth'));
 
-// router.use('/families', require('./families'));
+router.use('/users', require('./users'));
 
 // router.use('/polls', require('./polls'));
 

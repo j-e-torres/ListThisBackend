@@ -113,7 +113,9 @@ User.exchangeTokenForUser = async function (token) {
 
     if (!user) {
       throw new Error();
-    } else return user;
+    } else {
+      return user;
+    }
   } catch (err) {
     const error = new Error('Bad token');
     error.status = 401;

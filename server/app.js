@@ -1,8 +1,7 @@
 const express = require('express');
 const app = express();
-const { User } = require('./db/models');
-
 app.use(express.json());
+const { User } = require('./db/models');
 
 app.use((req, res, next) => {
   if (!req.headers.authorization) {
