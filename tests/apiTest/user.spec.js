@@ -29,7 +29,17 @@ describe('user api tests', () => {
         password: 'La1La1',
       };
 
-      return app.post('/api/auth/login').send(creds).expect(200);
+      const response = await app
+        .post('/api/auth/login')
+        .send(creds)
+        .expect(200);
+
+      const _response = await app.get('/api/auth/login').set({
+        authorization: response.body.token,
+      });
+
+      expect(_response.status).toBe(200);
+      expect(_response.body.username).toBe(newUser.username);
     });
   });
 });

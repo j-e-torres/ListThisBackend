@@ -7,9 +7,13 @@ const { User } = require('../db/models');
 router.post('/login', (req, res, next) => {
   User.authenticate(req.body)
     .then((token) => {
-      res.send(token);
+      res.send({ token });
     })
     .catch(next);
+});
+
+router.get('/login', (req, res, next) => {
+  res.send(req.user);
 });
 
 module.exports = router;

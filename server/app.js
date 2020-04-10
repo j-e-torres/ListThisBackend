@@ -1,9 +1,21 @@
 const express = require('express');
 const app = express();
-
-module.exports = app;
+const { User } = require('./db/models');
 
 app.use(express.json());
+
+app.use((req, res, next) => {
+  if (!req.headers.authorization) {
+    return next();
+  }
+
+  User.exchangeTokenForUser(req.headers.authorization)
+    .then((user) => {
+      req.user = user;
+      next();
+    })
+    .catch(next);
+});
 
 app.use('/api', require('./api'));
 
@@ -21,3 +33,5 @@ app.use((error, req, res, next) => {
   console.error(errors);
   res.status(error.status || 500).send({ errors });
 });
+
+module.exports = app;

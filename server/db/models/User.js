@@ -105,6 +105,22 @@ const User = db.define(
 
 // class methods
 
+User.exchangeTokenForUser = async function (token) {
+  try {
+    const userId = await jwt.decode(token, config.get('JWT_ACCESS_TOKEN')).id;
+
+    const user = await User.findByPk(userId);
+
+    if (!user) {
+      throw new Error();
+    } else return user;
+  } catch (err) {
+    const error = new Error('Bad token');
+    error.status = 401;
+    throw error;
+  }
+};
+
 User.authenticate = function ({ username, password }) {
   username = username.toLowerCase();
 
