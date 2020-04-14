@@ -287,7 +287,7 @@ describe('User model tests', () => {
 
       return Promise.all([newerUser.save(), newGroup.save(), newUser.save()])
         .then(([_newerUser, _newGroup, _newUser]) => {
-          return _newUser.addUserToGroup(newerUser, newGroup);
+          return _newUser.addUserToGroup(newerUser.username, newGroup);
         })
         .then(() => {
           return User.findByPk(newerUser.id, {

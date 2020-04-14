@@ -11,10 +11,6 @@ const List = db.define('list', {
 
   listName: {
     type: Sequelize.STRING,
-    // unique: {
-    //   args: true,
-    //   msg: 'List name already in use!',
-    // },
     allowNull: false,
     validate: {
       notNull: {

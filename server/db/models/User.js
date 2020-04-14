@@ -68,11 +68,6 @@ const User = db.define(
         },
       },
     },
-
-    // isGroupAdmin: {
-    //   type: Sequelize.BOOLEAN,
-    //   defaultValue: false,
-    // },
   },
 
   {
@@ -151,9 +146,11 @@ User.authenticate = function ({ username, password }) {
 };
 
 User.signUp = function ({ username, password, displayName }) {
+  // username = username.toLowerCase();
+
   return User.create({ username, password, displayName })
     .then((user) => {
-      return user;
+      return jwt.encode({ id: user.id }, config.get('JWT_ACCESS_TOKEN'));
     })
     .catch((e) => {
       throw e;
@@ -171,11 +168,9 @@ User.prototype.createNewGroup = function (group) {
     });
 };
 
-User.prototype.addUserToGroup = function (user, group) {
+User.prototype.addUserToGroup = function (newUser, group) {
   if (group.groupOwner === this.username) {
-    return User.findByPk(user.id).then((_user) => {
-      return _user.addGroup(group);
-    });
+    return newUser.addGroup(group);
   } else {
     throw new Error('User is not a group owner');
   }
