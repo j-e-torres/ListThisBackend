@@ -20,7 +20,10 @@ describe('User model tests', () => {
   });
 
   afterEach(() => {
-    return Promise.all([User.truncate({ cascade: true })]);
+    return Promise.all([
+      User.truncate({ cascade: true }),
+      Group.truncate({ cascade: true }),
+    ]);
   });
 
   describe('attributes definition', () => {
@@ -234,6 +237,9 @@ describe('User model tests', () => {
       };
 
       return User.signUp(signUpCredentials)
+        .then((token) => {
+          return User.exchangeTokenForUser(token);
+        })
         .then((user) => expect(user.username).toBe('princess'))
         .catch((e) => {
           throw Error(
@@ -287,7 +293,7 @@ describe('User model tests', () => {
 
       return Promise.all([newerUser.save(), newGroup.save(), newUser.save()])
         .then(([_newerUser, _newGroup, _newUser]) => {
-          return _newUser.addUserToGroup(newerUser.username, newGroup);
+          return _newUser.addUserToGroup(newerUser, newGroup);
         })
         .then(() => {
           return User.findByPk(newerUser.id, {

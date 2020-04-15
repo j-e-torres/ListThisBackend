@@ -48,4 +48,20 @@ describe('list api tests', () => {
 
     expect(response.body.length).toBe(3);
   });
+
+  test('Create and add new task to list', async () => {
+    await newList.save();
+
+    const newTask = {
+      taskName: 'apples',
+    };
+
+    const response = await app
+      .post(`/api/lists/${newList.id}/tasks`)
+      .send(newTask)
+      .expect(200);
+
+    expect(response.body.taskName).toBe('apples');
+    expect(response.body.listId).toBe(newList.id);
+  });
 });

@@ -80,15 +80,19 @@ describe('group api tests', () => {
     expect(response.body.length).toBe(3);
   });
 
-  // test('Group admin can add user to group route', async () => {
-  //   newGroup.groupOwner = 'ubern00bi3';
-  //   await newGroup.save();
+  test('Create and add new list to group', async () => {
+    await newGroup.save();
 
-  //   // const user =
+    const newListCreds = {
+      listName: 'trader joes',
+    };
 
-  //   const response = await app
-  //     .post(`/api/groups/${newGroup.id}/users`)
-  //     .send()
-  //     .expect(200);
-  // });
+    const response = await app
+      .post(`/api/groups/${newGroup.id}/lists`)
+      .send(newListCreds)
+      .expect(200);
+
+    expect(response.body.listName).toBe('trader joes');
+    expect(response.body.groupId).toBe(newGroup.id);
+  });
 });

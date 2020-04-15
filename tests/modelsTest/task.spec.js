@@ -1,6 +1,5 @@
 const { Task } = require('../../server/db/models/');
 const db = require('../../server/db/db');
-const SequelizeValidationError = require('sequelize').ValidationError;
 
 const validationTester = require('../testHelperFunctions');
 
@@ -72,27 +71,5 @@ describe('Task model test', () => {
           });
       });
     });
-
-    // test('taskName must be unique', async () => {
-    //   let error;
-    //   try {
-    //     await newTask.save();
-    //     newerTask = Task.build({
-    //       taskName: 'eggs',
-    //     });
-    //     await newerTask.save();
-    //   } catch (err) {
-    //     error = err;
-    //   }
-
-    //   if (error) {
-    //     const notEmptyError = error.errors.find(
-    //       (e) => e.validatorKey === 'not_unique'
-    //     );
-
-    //     if (notEmptyError)
-    //       expect(notEmptyError.message).toBe('Task name already in use!');
-    //   } else throw Error('taskName validation failed');
-    // });
   });
 });

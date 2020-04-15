@@ -1,6 +1,5 @@
-const { List, Task } = require('../../server/db/models/');
+const { List } = require('../../server/db/models/');
 const db = require('../../server/db/db');
-const SequelizeValidationError = require('sequelize').ValidationError;
 
 const validationTester = require('../testHelperFunctions');
 
@@ -55,28 +54,6 @@ describe('List model tests', () => {
           'List name cannot be empty'
         );
       });
-
-      // test('listName must be unique', async () => {
-      //   let error;
-      //   try {
-      //     await newList.save();
-      //     newerList = List.build({
-      //       listName: 'trader joes',
-      //     });
-      //     await newerList.save();
-      //   } catch (err) {
-      //     error = err;
-      //   }
-
-      //   if (error) {
-      //     const notEmptyError = error.errors.find(
-      //       (e) => e.validatorKey === 'not_unique'
-      //     );
-
-      //     if (notEmptyError)
-      //       expect(notEmptyError.message).toBe('List name already in use!');
-      //   } else throw Error('listName validation failed');
-      // });
     });
   });
 

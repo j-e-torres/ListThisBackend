@@ -1,6 +1,5 @@
-const { Group, List } = require('../../server/db/models/');
+const { Group } = require('../../server/db/models/');
 const db = require('../../server/db/db');
-const SequelizeValidationError = require('sequelize').ValidationError;
 
 const validationTester = require('../testHelperFunctions');
 

@@ -23,4 +23,11 @@ router.get('/:id/lists', (req, res, next) => {
     .catch(next);
 });
 
+router.post('/:id/lists', (req, res, next) => {
+  Group.findByPk(req.params.id)
+    .then((group) => group.createListToGroup(req.body))
+    .then((list) => res.send(list))
+    .catch(next);
+});
+
 module.exports = router;

@@ -12,10 +12,6 @@ const Group = db.define('group', {
 
   groupName: {
     type: Sequelize.STRING,
-    // unique: {
-    //   args: true,
-    //   msg: 'Group name already in use!',
-    // },
     allowNull: false,
     validate: {
       notNull: {

@@ -135,7 +135,6 @@ User.authenticate = function ({ username, password }) {
       return bcrypt.compare(password, user.password);
     })
     .then((authenticated) => {
-      // if (authenticated) return _user;
       if (authenticated)
         return jwt.encode({ id: _user.id }, config.get('JWT_ACCESS_TOKEN'));
 
@@ -146,8 +145,6 @@ User.authenticate = function ({ username, password }) {
 };
 
 User.signUp = function ({ username, password, displayName }) {
-  // username = username.toLowerCase();
-
   return User.create({ username, password, displayName })
     .then((user) => {
       return jwt.encode({ id: user.id }, config.get('JWT_ACCESS_TOKEN'));

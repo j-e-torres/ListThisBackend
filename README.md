@@ -2,8 +2,8 @@
 
 # API backend
 
-- need tests
-- need api
+- √ need tests
+- √ need api
 
   # Things to render
 
@@ -16,18 +16,36 @@
 
   - √ Sign up and create a user route
   - √ Create a group Route
-  - Create a list route
-  - create a task route
+  - √ Create and add list to group route
+  - √ create and add task to list route
 
   # Things to add
 
   - √ Add user to group
-  - Add List to group
-  - Add Task to List
 
-# Things needed for listthisbackend database functionality
+  # Things needed for listthisbackend database functionality
 
-- Delete items
-- Edit item
-- Delete lists
-- Delete groups
+  - Delete items
+  - Edit item
+  - Delete lists
+  - Delete groups
+
+# Front end todo
+
+- look at stack navigator
+- create redux store and connect to backend
+
+  # Front end axios/redux calls
+
+  - Register call
+  - Log in call
+  - User's groups call
+  - Group's lists call
+  - List's tasks call
+
+  # functionality
+
+  - User create group call
+  - Add user to group call
+  - Create and add new list to group
+  - Create and add new task to list
