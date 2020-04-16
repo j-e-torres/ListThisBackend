@@ -4,7 +4,7 @@
   "description": "Backend for react native app",
   "main": "index.js",
   "scripts": {
-    "start": "node server/",
+    "start": "node server",
     "start:dev": "nodemon server/ --ignore tests/",
     "userModelTest": "DATABASE_URL=postgres://localhost/listthisdbtest jest ./tests/modelsTest/user.spec.js --watch --runInBand --verbose",
     "groupModelTest": "DATABASE_URL=postgres://localhost/listthisdbtest jest ./tests/modelsTest/group.spec.js --watch --runInBand --verbose",
