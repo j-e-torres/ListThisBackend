@@ -18,6 +18,12 @@ app.use((req, res, next) => {
 
 app.use('/api', require('./api'));
 
+app.use((req, res, next) => {
+  const err = new Error('No Page Found');
+  err.status = 404;
+  next(err);
+});
+
 //error handling
 app.use((error, req, res, next) => {
   let errors;
