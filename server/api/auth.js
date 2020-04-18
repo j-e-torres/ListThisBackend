@@ -4,7 +4,7 @@ const { User } = require('../db/models');
 
 // /api/auth/login below
 
-router.post('/login', (req, res, next) => {
+router.put('/login', (req, res, next) => {
   User.authenticate(req.body)
     .then((token) => {
       res.send({ token });
