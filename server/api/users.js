@@ -16,6 +16,12 @@ router.get('/:id/groups', (req, res, next) => {
     .catch(next);
 });
 
+router.get('/', (req, res, next) => {
+  User.findAll()
+    .then((users) => res.send(users))
+    .catch(next);
+});
+
 router.post('/', (req, res, next) => {
   User.signUp(req.body)
     .then((token) => res.send({ token }))
