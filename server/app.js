@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 app.use(express.json());
+const cors = require('cors');
 const { User } = require('./db/models');
 
 app.use((req, res, next) => {
@@ -15,6 +16,8 @@ app.use((req, res, next) => {
     })
     .catch(next);
 });
+
+app.use(cors());
 
 app.use('/api', require('./api'));
 

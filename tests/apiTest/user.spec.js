@@ -36,6 +36,7 @@ describe('user api tests', () => {
 
       const response = await app.put('/api/auth/login').send(creds).expect(200);
 
+      console.log('response token', response.body.token);
       const _response = await app.get('/api/auth/login').set({
         authorization: response.body.token,
       });
