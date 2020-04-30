@@ -12,11 +12,9 @@ router.get('/:id/groups', (req, res, next) => {
       },
       {
         model: List,
-        include: [
-          {
-            model: Task,
-          },
-        ],
+        include: {
+          model: Task,
+        },
       },
     ],
   })
