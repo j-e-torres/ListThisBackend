@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const { User, Group, List } = require('../db/models');
+const { User, Group, List, Task } = require('../db/models');
 
 // /api/users
 
@@ -12,6 +12,11 @@ router.get('/:id/groups', (req, res, next) => {
       },
       {
         model: List,
+        include: [
+          {
+            model: Task,
+          },
+        ],
       },
     ],
   })
