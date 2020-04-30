@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const { User, Group } = require('../db/models');
+const { User, Group, List } = require('../db/models');
 
 // /api/users
 
@@ -9,6 +9,9 @@ router.get('/:id/groups', (req, res, next) => {
       {
         model: User,
         where: { id: req.params.id },
+      },
+      {
+        model: List,
       },
     ],
   })
