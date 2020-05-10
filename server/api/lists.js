@@ -3,6 +3,12 @@ const { List, Task } = require('../db/models');
 
 // /api/lists
 
+router.get('/', (req, res, next) => {
+  List.findAll()
+    .then((lists) => res.send(lists))
+    .catch(next);
+});
+
 router.get('/:id/tasks', (req, res, next) => {
   Task.findAll({ where: { listId: req.params.id } })
     .then((tasks) => res.send(tasks))

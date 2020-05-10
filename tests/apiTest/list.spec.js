@@ -25,6 +25,10 @@ describe('list api tests', () => {
     ]);
   });
 
+  test('get all lists', async () => {
+    await app.get('/api/lists').expect(200);
+  });
+
   test('Get all tasks that belong to a list', async () => {
     await newList.save();
 
