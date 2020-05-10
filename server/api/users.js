@@ -10,14 +10,6 @@ router.get('/:id/groups', (req, res, next) => {
         model: User,
         where: { id: req.params.id },
       },
-      {
-        model: List,
-        include: [
-          {
-            model: Task,
-          },
-        ],
-      },
     ],
   })
     .then((groups) => res.send(groups))
