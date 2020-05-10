@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const { User, Group, List } = require('../db/models');
+const { User, Group, List, Task } = require('../db/models');
 
 // /api/groups/
 router.get('/:id/users', (req, res, next) => {
@@ -18,6 +18,11 @@ router.get('/:id/users', (req, res, next) => {
 router.get('/:id/lists', (req, res, next) => {
   List.findAll({
     where: { groupId: req.params.id },
+    include: [
+      {
+        model: Task,
+      },
+    ],
   })
     .then((lists) => res.send(lists))
     .catch(next);
