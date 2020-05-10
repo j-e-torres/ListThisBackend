@@ -10,6 +10,9 @@ router.get('/:id/groups', (req, res, next) => {
         model: User,
         where: { id: req.params.id },
       },
+      {
+        model: List,
+      },
     ],
   })
     .then((groups) => res.send(groups))
