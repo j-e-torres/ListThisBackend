@@ -8,4 +8,6 @@ router.use('/groups', require('./groups'));
 
 router.use('/lists', require('./lists'));
 
+router.use('/tasks', require('./tasks'));
+
 module.exports = router;
