@@ -4,7 +4,13 @@ const { List, Task } = require('../db/models');
 // /api/lists
 
 router.get('/', (req, res, next) => {
-  List.findAll()
+  List.findAll({
+    include: [
+      {
+        model: Task,
+      },
+    ],
+  })
     .then((lists) => res.send(lists))
     .catch(next);
 });
