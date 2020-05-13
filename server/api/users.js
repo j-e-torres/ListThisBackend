@@ -36,7 +36,11 @@ router.post('/:id/groups', (req, res, next) => {
     .then((user) => {
       return user.createNewGroup(req.body);
     })
-    .then((group) => Group.findByPk(group.id).then((_group) => _group))
+    .then((group) =>
+      Group.findByPk(group.id, {
+        include: [{ model: User }],
+      }).then((_group) => _group)
+    )
     .then((__group) => res.send(__group))
     .catch(next);
 });
