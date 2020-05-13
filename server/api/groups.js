@@ -31,7 +31,12 @@ router.get('/:id/lists', (req, res, next) => {
 router.post('/:id/lists', (req, res, next) => {
   Group.findByPk(req.params.id)
     .then((group) => group.createListToGroup(req.body))
-    .then((list) => res.send(list))
+    .then((list) =>
+      List.findByPk(list.id, {
+        include: [{ model: Task }],
+      }).then((_list) => _list)
+    )
+    .then((__list) => res.send(__list))
     .catch(next);
 });
 
