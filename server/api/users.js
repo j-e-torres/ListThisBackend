@@ -58,6 +58,7 @@ router.post('/:userId/groups/:groupId', async (req, res, next) => {
     .then(([groupOwner, group, addUser]) => {
       return groupOwner.addUserToGroup(addUser, group);
     })
+    // .then((usergroup) => User.findByPk(usergroup.userId))
     .then((usergroup) => {
       res.send(usergroup);
     })
