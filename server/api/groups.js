@@ -2,6 +2,21 @@ const router = require('express').Router();
 const { User, Group, List, Task } = require('../db/models');
 
 // /api/groups/
+router.get('/', (req, res, next) => {
+  Group.findAll({
+    include: [
+      {
+        model: User,
+      },
+      {
+        model: List,
+      },
+    ],
+  })
+    .then((groups) => res.send(groups))
+    .catch(next);
+});
+
 router.get('/:id/users', (req, res, next) => {
   User.findAll({
     include: [
