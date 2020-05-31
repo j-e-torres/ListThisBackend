@@ -20,7 +20,13 @@ router.get('/:id/groups', (req, res, next) => {
 });
 
 router.get('/', (req, res, next) => {
-  User.findAll()
+  User.findAll({
+    include: [
+      {
+        model: Group,
+      },
+    ],
+  })
     .then((users) => res.send(users))
     .catch(next);
 });
