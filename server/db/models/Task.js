@@ -30,8 +30,8 @@ const Task = db.define('task', {
 });
 
 // instance methods
-Task.prototype.completeTask = function (task) {
-  return task.update({ completed: true });
+Task.prototype.completeTask = function () {
+  return this.update({ completed: true });
 };
 
 module.exports = Task;

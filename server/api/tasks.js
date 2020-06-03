@@ -8,4 +8,13 @@ router.get('/', (req, res, next) => {
     .catch(next);
 });
 
+router.put('/:taskId', (req, res, next) => {
+  Task.findByPk(req.params.taskId)
+    .then((task) => task.completeTask())
+    .then((_task) => {
+      res.send(_task);
+    })
+    .catch(next);
+});
+
 module.exports = router;
