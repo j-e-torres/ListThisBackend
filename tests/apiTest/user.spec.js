@@ -36,7 +36,6 @@ describe('user api tests', () => {
 
       const response = await app.put('/api/auth/login').send(creds).expect(200);
 
-      console.log('response token', response.body.token);
       const _response = await app.get('/api/auth/login').set({
         authorization: response.body.token,
       });
@@ -133,8 +132,9 @@ describe('user api tests', () => {
         .send({ username: 'superman' })
         .expect(200);
 
-      expect(response.body[0].userId).toBe(otherUser.id);
-      expect(response.body[0].groupId).toBe(newGroup.id);
+      // console.log('21111', response.body);
+      expect(response.body.id).toBe(otherUser.id);
+      expect(response.body.username).toBe(otherUser.username);
     });
   });
 });

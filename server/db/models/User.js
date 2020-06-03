@@ -166,7 +166,7 @@ User.prototype.createNewGroup = function (group) {
 };
 
 User.prototype.addUserToGroup = function (newUser, group) {
-  newUser.toLowerCase();
+  newUser.username.toLowerCase();
 
   if (group.groupOwner === this.username) {
     return newUser.addGroup(group);

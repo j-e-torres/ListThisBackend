@@ -25,4 +25,12 @@ describe('task api', () => {
   test('get all tasks', async () => {
     await app.get('/api/tasks').expect(200);
   });
+
+  test('complete task', async () => {
+    await newTask.save();
+
+    const res = await app.put(`/api/tasks/${newTask.id}`).expect(200);
+
+    expect(res.body.completed).toBe(true);
+  });
 });
