@@ -11,7 +11,9 @@ router.get('/', (req, res, next) => {
 router.put('/:taskId', (req, res, next) => {
   Task.findByPk(req.params.taskId)
     .then((task) => task.completeTask())
-    .then((something) => res.send(something))
+    .then((_task) => {
+      res.send(_task);
+    })
     .catch(next);
 });
 
