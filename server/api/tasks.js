@@ -17,4 +17,13 @@ router.put('/:taskId', (req, res, next) => {
     .catch(next);
 });
 
+router.delete('/:taskId', (req, res, next) => {
+  Task.findByPk(req.params.taskId)
+    .then((task) => {
+      task.destroy();
+      res.sendStatus(204);
+    })
+    .catch(next);
+});
+
 module.exports = router;
