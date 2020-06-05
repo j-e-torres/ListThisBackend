@@ -22,15 +22,21 @@ describe('task api', () => {
     return Promise.all([Task.truncate({ cascade: true })]);
   });
 
-  test('get all tasks', async () => {
+  test('can get all tasks', async () => {
     await app.get('/api/tasks').expect(200);
   });
 
-  test('complete task', async () => {
+  test('can complete task', async () => {
     await newTask.save();
 
     const res = await app.put(`/api/tasks/${newTask.id}`).expect(200);
 
     expect(res.body.completed).toBe(true);
+  });
+
+  test('can delete task', async () => {
+    await newTask.save();
+
+    const res = await app.delete(`/api/tasks/${newTask.id}`).expect(204);
   });
 });
