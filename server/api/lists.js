@@ -28,4 +28,11 @@ router.post('/:listId/tasks', (req, res, next) => {
     .catch(next);
 });
 
+router.put('/:listId/notes', (req, res, next) => {
+  List.findByPk(req.params.listId)
+    .then((list) => list.update(req.body))
+    .then((www) => res.send(www))
+    .catch(next);
+});
+
 module.exports = router;
