@@ -68,4 +68,20 @@ describe('list api tests', () => {
     expect(response.body.taskName).toBe('apples');
     expect(response.body.listId).toBe(newList.id);
   });
+
+  test('can update list notes', async () => {
+    await newList.save();
+
+    const notes = {
+      listNotes: 'buy 3 of each',
+    };
+
+    const response = await app
+      .put(`/api/lists/${newList.id}/notes`)
+      .send(notes)
+      .expect(200);
+
+    expect(response.body.listNotes).toBe('buy 3 of each');
+    // expect(response.body.listId).toBe(newList.id);
+  });
 });
