@@ -29,9 +29,15 @@ router.post('/:listId/tasks', (req, res, next) => {
 });
 
 router.put('/:listId/notes', (req, res, next) => {
-  List.findByPk(req.params.listId)
+  List.findByPk(req.params.listId, {
+    include: [
+      {
+        model: Task,
+      },
+    ],
+  })
     .then((list) => list.update(req.body))
-    .then((www) => res.send(www))
+    .then((_list) => res.send(_list))
     .catch(next);
 });
 
