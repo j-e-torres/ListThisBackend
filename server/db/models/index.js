@@ -1,23 +1,20 @@
-const Group = require('./Group');
+// const Group = require('./Group');
 const List = require('./List');
 const Task = require('./Task');
 const User = require('./User');
 
-User.belongsToMany(Group, {
-  through: 'usergroup',
+User.belongsToMany(List, {
+  through: 'userlist',
 });
-Group.belongsToMany(User, {
-  through: 'usergroup',
+List.belongsToMany(User, {
+  through: 'userlist',
 });
-
-Group.hasMany(List);
-List.belongsTo(Group);
 
 List.hasMany(Task);
 Task.belongsTo(List);
 
 module.exports = {
-  Group,
+  // Group,
   List,
   Task,
   User,

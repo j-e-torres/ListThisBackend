@@ -1,29 +1,28 @@
 const router = require('express').Router();
-const { User, Group, List, Task } = require('../db/models');
+const { User, List } = require('../db/models');
 
 // /api/users
 
-router.get('/:id/groups', (req, res, next) => {
-  Group.findAll({
+// get lists that belong to user
+router.get('/:id/lists', (req, res, next) => {
+  List.findAll({
     include: [
       {
         model: User,
         where: { id: req.params.id },
       },
-      {
-        model: List,
-      },
     ],
   })
-    .then((groups) => res.send(groups))
+    .then((lists) => res.send(lists))
     .catch(next);
 });
 
+//get all users include model list
 router.get('/', (req, res, next) => {
   User.findAll({
     include: [
       {
-        model: Group,
+        model: List,
       },
     ],
   })
@@ -31,42 +30,43 @@ router.get('/', (req, res, next) => {
     .catch(next);
 });
 
+// create new user
 router.post('/', (req, res, next) => {
   User.signUp(req.body)
     .then((token) => res.send({ token }))
     .catch(next);
 });
 
-router.post('/:id/groups', (req, res, next) => {
+// create new List
+router.post('/:id/lists', (req, res, next) => {
   User.findByPk(req.params.id)
     .then((user) => {
-      return user.createNewGroup(req.body);
+      return user.createNewList(req.body);
     })
-    .then((group) =>
-      Group.findByPk(group.id, {
-        include: [{ model: User }, { model: List }],
-      }).then((_group) => _group)
+    .then((list) =>
+      List.findByPk(list.id, {
+        include: [{ model: User }],
+      }).then((_list) => _list)
     )
-    .then((__group) => res.send(__group))
+    .then((__list) => res.send(__list))
     .catch(next);
 });
 
-// /:userId/groups/:groupId
-
-router.post('/:userId/groups/:groupId', async (req, res, next) => {
+// add user to a list
+router.post('/:userId/lists/:listId', async (req, res, next) => {
   Promise.all([
     User.findByPk(req.params.userId),
-    Group.findByPk(req.params.groupId),
+    List.findByPk(req.params.listId),
     User.findOne({
       where: { username: req.body.username },
     }),
   ])
-    .then(([groupOwner, group, addUser]) => {
-      return groupOwner.addUserToGroup(addUser, group);
+    .then(([listOwner, list, addUser]) => {
+      return listOwner.addUserToList(addUser, list);
     })
-    .then((usergroup) => {
-      return User.findByPk(usergroup[0].userId, {
-        include: [{ model: Group }],
+    .then((userlist) => {
+      return User.findByPk(userlist[0].userId, {
+        include: [{ model: List }],
       });
     })
     .then((user) => {
