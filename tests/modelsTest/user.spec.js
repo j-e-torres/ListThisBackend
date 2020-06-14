@@ -1,4 +1,4 @@
-const { User, Group } = require('../../server/db/models/');
+const { User, List } = require('../../server/db/models/');
 const db = require('../../server/db/db');
 const jwt = require('jwt-simple');
 const config = require('../../config');
@@ -22,7 +22,7 @@ describe('User model tests', () => {
   afterEach(() => {
     return Promise.all([
       User.truncate({ cascade: true }),
-      Group.truncate({ cascade: true }),
+      List.truncate({ cascade: true }),
     ]);
   });
 
@@ -32,7 +32,6 @@ describe('User model tests', () => {
       expect(newUser).toHaveProperty('username');
       expect(newUser).toHaveProperty('password');
       expect(newUser).toHaveProperty('displayName');
-      // expect(newUser).toHaveProperty('isGroupAdmin');
     });
   });
 
@@ -249,17 +248,17 @@ describe('User model tests', () => {
     });
 
     test('User can create a group and become group admin', () => {
-      const createGroup = {
-        groupName: 'family',
+      const createList = {
+        listName: 'family',
       };
 
       return newUser
         .save()
         .then((_user) => {
-          return _user.createNewGroup(createGroup);
+          return _user.createNewList(createList);
         })
-        .then((group) => {
-          return Group.findByPk(group.id, {
+        .then((list) => {
+          return List.findByPk(list.id, {
             include: [
               {
                 model: User,
@@ -268,10 +267,10 @@ describe('User model tests', () => {
             ],
           });
         })
-        .then((foundGroup) => {
+        .then((foundList) => {
           return Promise.all([
-            expect(foundGroup.users[0].username).toBe(newUser.username),
-            expect(foundGroup.groupOwner).toBe(newUser.username),
+            expect(foundList.users[0].username).toBe(newUser.username),
+            expect(foundList.listOwner).toBe(newUser.username),
           ]);
         })
         .catch((e) => {
@@ -280,9 +279,9 @@ describe('User model tests', () => {
     });
 
     test('User group admin can add a user to a group', () => {
-      const newGroup = Group.build({
-        groupName: 'family',
-        groupOwner: 'ubern00bi3',
+      const newList = List.build({
+        listName: 'family',
+        listOwner: 'ubern00bi3',
       });
 
       const newerUser = User.build({
@@ -291,24 +290,22 @@ describe('User model tests', () => {
         displayName: 'fishyladybitch',
       });
 
-      return Promise.all([newerUser.save(), newGroup.save(), newUser.save()])
-        .then(([_newerUser, _newGroup, _newUser]) => {
-          return _newUser.addUserToGroup(newerUser, newGroup);
+      return Promise.all([newerUser.save(), newList.save(), newUser.save()])
+        .then(([_newerUser, _newList, _newUser]) => {
+          return _newUser.addUserToList(newerUser, newList);
         })
         .then(() => {
           return User.findByPk(newerUser.id, {
             include: [
               {
-                model: Group,
-                where: { id: newGroup.id },
+                model: List,
+                where: { id: newList.id },
               },
             ],
           });
         })
         .then((foundUser) => {
-          return Promise.all([
-            expect(foundUser.groups[0].id).toBe(newGroup.id),
-          ]);
+          return Promise.all([expect(foundUser.lists[0].id).toBe(newList.id)]);
         })
         .catch((e) => {
           throw Error(`Adding user to group failed: ${e.message}`);
