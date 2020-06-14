@@ -4,38 +4,36 @@ const UserSeed = [
   {
     username: 'superman200',
     displayName: 'el juan',
-    password: '1L234s'
+    password: '1L234s',
   },
   {
     username: 'wondergirl',
     displayName: 'wonder woman',
-    password: '1L234s'
-  }
+    password: '1L234s',
+  },
 ];
 
-const GroupSeed = (count = 2) => {
-  const _groups = [];
+// const GroupSeed = (count = 2) => {
+//   const _groups = [];
 
-  while (_groups.length < count) {
-    _groups.push({
-      groupName: faker.name.title()
-    });
-  }
+//   while (_groups.length < count) {
+//     _groups.push({
+//       groupName: faker.name.title()
+//     });
+//   }
 
-  // console.log('_groups', _groups);
-  return _groups;
-};
+//   // console.log('_groups', _groups);
+//   return _groups;
+// };
 
 const ListSeed = (count = 4) => {
   const _lists = [];
 
   while (_lists.length < count) {
     _lists.push({
-      listName: faker.company.companyName()
+      listName: faker.company.companyName(),
     });
   }
-
-  // console.log('_lists', _lists);
   return _lists;
 };
 
@@ -44,17 +42,14 @@ const TaskSeed = (count = 12) => {
 
   while (_tasks.length < count) {
     _tasks.push({
-      taskName: faker.commerce.productName()
+      taskName: faker.commerce.productName(),
     });
   }
-
-  // console.log('_tasks', _tasks);
   return _tasks;
 };
 
 module.exports = {
   UserSeed,
   TaskSeed,
-  GroupSeed,
-  ListSeed
+  ListSeed,
 };
