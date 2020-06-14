@@ -155,23 +155,23 @@ User.signUp = function ({ username, password, displayName }) {
 };
 
 // instance methods
-User.prototype.createNewGroup = function (group) {
-  return this.createGroup(group)
-    .then((_group) => {
-      return _group.update({ groupOwner: this.username });
+User.prototype.createNewList = function (list) {
+  return this.createList(list)
+    .then((_list) => {
+      return _list.update({ listOwner: this.username });
     })
     .catch((e) => {
       throw e;
     });
 };
 
-User.prototype.addUserToGroup = function (newUser, group) {
+User.prototype.addUserToList = function (newUser, list) {
   newUser.username.toLowerCase();
 
-  if (group.groupOwner === this.username) {
-    return newUser.addGroup(group);
+  if (list.listOwner === this.username) {
+    return newUser.addList(list);
   } else {
-    throw new Error('User is not a group owner');
+    throw new Error('User is not a list owner');
   }
 };
 

@@ -28,6 +28,7 @@ describe('List model tests', () => {
       expect(newList).toHaveProperty('id');
       expect(newList).toHaveProperty('listName');
       expect(newList).toHaveProperty('listNotes');
+      expect(newList).toHaveProperty('listOwner');
     });
   });
 

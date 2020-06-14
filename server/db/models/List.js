@@ -9,6 +9,10 @@ const List = db.define('list', {
     defaultValue: Sequelize.UUIDV4,
   },
 
+  listOwner: {
+    type: Sequelize.STRING,
+  },
+
   listName: {
     type: Sequelize.STRING,
     allowNull: false,
