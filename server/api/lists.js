@@ -1,15 +1,11 @@
 const router = require('express').Router();
-const { List, Task } = require('../db/models');
+const { List, Task, User } = require('../db/models');
 
 // /api/lists
 
 router.get('/', (req, res, next) => {
   List.findAll({
-    include: [
-      {
-        model: Task,
-      },
-    ],
+    include: [{ model: Task }, { model: User }],
   })
     .then((lists) => res.send(lists))
     .catch(next);
