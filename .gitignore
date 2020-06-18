@@ -2,3 +2,4 @@ node_modules/
 sequelizeErrorObject.md
 .env.js
 deprecated
+env.js

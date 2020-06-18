@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const { User, List } = require('../db/models');
+const { User, List, Task } = require('../db/models');
 
 // /api/users
 
@@ -45,7 +45,7 @@ router.post('/:id/lists', (req, res, next) => {
     })
     .then((list) =>
       List.findByPk(list.id, {
-        include: [{ model: User }],
+        include: [{ model: User }, { model: Task }],
       }).then((_list) => _list)
     )
     .then((__list) => res.send(__list))

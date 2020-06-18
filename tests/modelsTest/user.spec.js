@@ -1,9 +1,9 @@
-const { User, List } = require('../../server/db/models/');
+const { User, List, Task } = require('../../server/db/models/');
 const db = require('../../server/db/db');
 const jwt = require('jwt-simple');
 const config = require('../../config');
 
-const validationTester = require('../testHelperFunctions');
+const { validationTester } = require('../testHelperFunctions');
 
 describe('User model tests', () => {
   beforeAll(() => {
@@ -27,7 +27,7 @@ describe('User model tests', () => {
   });
 
   describe('attributes definition', () => {
-    test('Includes `id`, `username`, `password`, `displayName`, and `isGroupAdmin` fields', () => {
+    test('Includes `id`, `username`, `password`, `displayName` fields', () => {
       expect(newUser).toHaveProperty('id');
       expect(newUser).toHaveProperty('username');
       expect(newUser).toHaveProperty('password');
@@ -247,15 +247,30 @@ describe('User model tests', () => {
         });
     });
 
-    test('User can create a group and become group admin', () => {
-      const createList = {
+    test('User can create a list and become list owner', () => {
+      // const list = {
+      //   listName: 'family',
+      // };
+
+      // const tasks = [
+      //   { taskName: 'punch face' },
+      //   { taskName: 'college fund' },
+      //   { taskName: 'give hugs' },
+      // ];
+
+      const list = {
         listName: 'family',
+        tasks: [
+          { taskName: 'punch face' },
+          { taskName: 'college fund' },
+          { taskName: 'give hugs' },
+        ],
       };
 
       return newUser
         .save()
         .then((_user) => {
-          return _user.createNewList(createList);
+          return _user.createNewList(list);
         })
         .then((list) => {
           return List.findByPk(list.id, {
@@ -264,6 +279,9 @@ describe('User model tests', () => {
                 model: User,
                 where: { id: newUser.id },
               },
+              {
+                model: Task,
+              },
             ],
           });
         })
@@ -271,14 +289,15 @@ describe('User model tests', () => {
           return Promise.all([
             expect(foundList.users[0].username).toBe(newUser.username),
             expect(foundList.listOwner).toBe(newUser.username),
+            expect(foundList.tasks.length).toBe(3),
           ]);
         })
         .catch((e) => {
-          throw Error(`Creating a group failed due to: ${e.message}`);
+          throw Error(`Creating a list failed due to: ${e.message}`);
         });
     });
 
-    test('User group admin can add a user to a group', () => {
+    test('listOwner can add a user to a list', () => {
       const newList = List.build({
         listName: 'family',
         listOwner: 'ubern00bi3',

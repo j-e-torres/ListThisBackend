@@ -94,11 +94,16 @@ describe('user api tests', () => {
       expect(_user.username).toBe('lookyloo');
     });
 
-    test('User create new list route', async () => {
+    test('User can create new list with array of tasks', async () => {
       await newUser.save();
 
       const newList = {
         listName: 'family',
+        tasks: [
+          { taskName: 'punch face' },
+          { taskName: 'college fund' },
+          { taskName: 'give hugs' },
+        ],
       };
 
       const response = await app
@@ -108,6 +113,7 @@ describe('user api tests', () => {
 
       expect(response.body.listName).toBe('family');
       expect(response.body.listOwner).toBe(newUser.username);
+      expect(response.body.tasks.length).toBe(3);
     });
 
     test('List owner can add a user to group', async () => {

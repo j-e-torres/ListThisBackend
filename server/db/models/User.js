@@ -3,6 +3,8 @@ const { Sequelize } = db;
 const bcrypt = require('bcrypt');
 const jwt = require('jwt-simple');
 const config = require('../../../config');
+const { createdSeedInstances } = require('../../../tests/testHelperFunctions');
+const Task = require('./Task');
 
 const User = db.define(
   'user',
@@ -156,10 +158,17 @@ User.signUp = function ({ username, password, displayName }) {
 
 // instance methods
 User.prototype.createNewList = function (list) {
-  return this.createList(list)
-    .then((_list) => {
-      return _list.update({ listOwner: this.username });
+  return Promise.all([
+    this.createList(list),
+    createdSeedInstances(Task, list.tasks),
+  ])
+    .then(([_list, tasks]) => {
+      return Promise.all([
+        _list.update({ listOwner: this.username }),
+        _list.setTasks(tasks),
+      ]);
     })
+    .then(([__list]) => __list)
     .catch((e) => {
       throw e;
     });
