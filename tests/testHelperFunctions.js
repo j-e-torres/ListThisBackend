@@ -28,4 +28,8 @@ const validationTester = async (
   else throw Error(`${errorString} validation failed.`);
 };
 
-module.exports = validationTester;
+const createdSeedInstances = (model, data) => {
+  return Promise.all(data.map((instance) => model.create(instance)));
+};
+
+module.exports = { validationTester, createdSeedInstances };
