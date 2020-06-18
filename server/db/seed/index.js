@@ -1,10 +1,7 @@
 const db = require('../db');
 const { User, Task, List } = require('../models');
 const { UserSeed, TaskSeed, ListSeed } = require('./FakerSeed');
-
-const createdSeedInstances = (model, data) => {
-  return Promise.all(data.map((instance) => model.create(instance)));
-};
+const { createdSeedInstances } = require('../../../tests/testHelperFunctions');
 
 const syncAndSeed = () => {
   return db
