@@ -38,8 +38,8 @@ router.post('/', (req, res, next) => {
 });
 
 // create new List
-router.post('/:id/lists', (req, res, next) => {
-  User.findByPk(req.params.id)
+router.post('/:userId/lists', (req, res, next) => {
+  User.findByPk(req.params.userId)
     .then((user) => {
       return user.createNewList(req.body);
     })
@@ -66,7 +66,12 @@ router.post('/:userId/lists/:listId', async (req, res, next) => {
     })
     .then((userlist) => {
       return User.findByPk(userlist[0].userId, {
-        include: [{ model: List }],
+        include: [
+          {
+            model: List,
+            include: [{ model: User }, { model: Task }],
+          },
+        ],
       });
     })
     .then((user) => {
