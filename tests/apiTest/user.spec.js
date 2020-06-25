@@ -140,6 +140,8 @@ describe('user api tests', () => {
 
       expect(response.body.id).toBe(otherUser.id);
       expect(response.body.username).toBe(otherUser.username);
+      // expect(response.body.lists).toBe(true);
+      // console.log(response.body.lists);
     });
   });
 });

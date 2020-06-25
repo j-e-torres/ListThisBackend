@@ -1,7 +1,7 @@
 const { List } = require('../../server/db/models/');
 const db = require('../../server/db/db');
 
-const validationTester = require('../testHelperFunctions');
+const { validationTester } = require('../../tests/testHelperFunctions');
 
 describe('List model tests', () => {
   beforeAll(() => {
@@ -59,22 +59,30 @@ describe('List model tests', () => {
   });
 
   describe('list model functions', () => {
-    test('Can create and add new task to current list', () => {
-      const newTask = {
-        taskName: 'oranges',
-      };
+    test('Can create and add an array of tasks to current list', () => {
+      const tasks = [
+        {
+          taskName: 'oranges',
+        },
+        {
+          taskName: 'fish',
+        },
+        {
+          taskName: 'apple',
+        },
+      ];
 
       return newList
         .save()
         .then((_list) => {
-          return _list.createNewTask(newTask);
+          return _list.createNewTasks(tasks);
         })
-        .then((_task) => {
-          return expect(_task.listId).toBe(newList.id);
+        .then((_list_) => {
+          return expect(_list_.tasks.length).toBe(3);
         })
         .catch((e) => {
           throw Error(
-            `Creating and adding new task to current list failed: ${e.message}`
+            `Creating and adding new tasks to current list failed: ${e.message}`
           );
         });
     });

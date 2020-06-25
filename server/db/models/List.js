@@ -1,5 +1,9 @@
 const db = require('../db');
 const { Sequelize } = db;
+const Task = require('./Task');
+const User = require('./User');
+
+const { createdSeedInstances } = require('../../../tests/testHelperFunctions');
 
 const List = db.define('list', {
   id: {
@@ -40,10 +44,19 @@ const List = db.define('list', {
 });
 
 // instance methods
-List.prototype.createNewTask = function (task) {
-  return this.createTask(task).catch((e) => {
-    throw e;
-  });
+List.prototype.createNewTasks = function (tasks) {
+  return createdSeedInstances(Task, tasks)
+    .then((tasks) => {
+      return this.setTasks(tasks);
+    })
+    .then((list) => {
+      return List.findByPk(list.id, {
+        include: [{ model: Task }, { model: User }],
+      }).then((_list) => _list);
+    })
+    .catch((e) => {
+      throw e;
+    });
 };
 
 module.exports = List;
