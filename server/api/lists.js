@@ -19,8 +19,8 @@ router.get('/:listId/tasks', (req, res, next) => {
 
 router.post('/:listId/tasks', (req, res, next) => {
   List.findByPk(req.params.listId)
-    .then((list) => list.createNewTask(req.body))
-    .then((task) => res.send(task))
+    .then((list) => list.createNewTasks(req.body))
+    .then((_list) => res.send(_list))
     .catch(next);
 });
 

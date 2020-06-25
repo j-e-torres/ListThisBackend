@@ -53,20 +53,27 @@ describe('list api tests', () => {
     expect(response.body.length).toBe(3);
   });
 
-  test('Create and add new task to list', async () => {
+  test('Create and add array of new tasks to list', async () => {
     await newList.save();
 
-    const newTask = {
-      taskName: 'apples',
-    };
+    const tasks = [
+      {
+        taskName: 'oranges',
+      },
+      {
+        taskName: 'fish',
+      },
+      {
+        taskName: 'apple',
+      },
+    ];
 
     const response = await app
       .post(`/api/lists/${newList.id}/tasks`)
-      .send(newTask)
+      .send(tasks)
       .expect(200);
 
-    expect(response.body.taskName).toBe('apples');
-    expect(response.body.listId).toBe(newList.id);
+    expect(response.body.tasks.length).toBe(3);
   });
 
   test('can update list notes', async () => {
