@@ -1,3 +1,4 @@
+/* eslint-disable node/no-unpublished-require */
 const app = require('supertest')(require('../../server/app'));
 const db = require('../../server/db/db');
 const { List, Task } = require('../../server/db/models');
@@ -16,16 +17,19 @@ describe('list api tests', () => {
    * Also, we empty the tables after each spec
    */
 
-  afterEach(() => Promise.all([
+  afterEach(() =>
+    Promise.all([
       List.truncate({ cascade: true }),
       Task.truncate({ cascade: true }),
-    ]));
+    ])
+  );
 
   test('get all lists', async () => {
+    await newList.save();
+
     const response = await app.get('/api/lists').expect(200);
 
-    expect(response.body.length).toBeGreaterThan(1);
-
+    expect(response.body).toHaveLength(1);
   });
 
   test('Get all tasks that belong to a list', async () => {
