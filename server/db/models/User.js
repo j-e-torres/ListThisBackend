@@ -5,6 +5,7 @@ const jwt = require('jwt-simple');
 const config = require('../../../config');
 const { createdSeedInstances } = require('../../../tests/testHelperFunctions');
 const Task = require('./Task');
+const List = require('./List');
 
 const User = db.define(
   'user',
@@ -168,7 +169,9 @@ User.prototype.createNewList = function (list) {
         _list.setTasks(tasks),
       ]);
     })
-    .then(([__list]) => __list)
+    .then(([updateList, tasksList]) => {
+      return tasksList;
+    })
     .catch((e) => {
       throw e;
     });
@@ -178,7 +181,9 @@ User.prototype.addUserToList = function (newUser, list) {
   newUser.username.toLowerCase();
 
   if (list.listOwner === this.username) {
-    return newUser.addList(list);
+    return newUser.addList(list).then((userlist) => {
+      return userlist[0];
+    });
   } else {
     throw new Error('User is not a list owner');
   }

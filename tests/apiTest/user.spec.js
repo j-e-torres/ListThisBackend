@@ -1,13 +1,11 @@
+const jwt = require('jwt-simple');
 const app = require('supertest')(require('../../server/app'));
 const db = require('../../server/db/db');
 const { User, List } = require('../../server/db/models');
-const jwt = require('jwt-simple');
 const config = require('../../config');
 
 describe('user api tests', () => {
-  beforeAll(() => {
-    return db.sync({ force: true });
-  });
+  beforeAll(() => db.sync({ force: true }));
 
   let newUser;
   beforeEach(() => {
@@ -18,12 +16,10 @@ describe('user api tests', () => {
     });
   });
 
-  afterEach(() => {
-    return Promise.all([
+  afterEach(() => Promise.all([
       User.truncate({ cascade: true }),
       List.truncate({ cascade: true }),
-    ]);
-  });
+    ]));
 
   describe('Auth routes', () => {
     test('User can login', async () => {
@@ -36,12 +32,12 @@ describe('user api tests', () => {
 
       const response = await app.put('/api/auth/login').send(creds).expect(200);
 
-      const _response = await app.get('/api/auth/login').set({
+      const otherResponse = await app.get('/api/auth/login').set({
         authorization: response.body.token,
       });
 
-      expect(_response.status).toBe(200);
-      expect(_response.body.username).toBe(newUser.username);
+      expect(otherResponse.status).toBe(200);
+      expect(otherResponse.body.username).toBe(newUser.username);
     });
 
     test('User cannot login without proper token', async () => {
@@ -72,7 +68,7 @@ describe('user api tests', () => {
         .get(`/api/users/${newUser.id}/lists`)
         .expect(200);
 
-      expect(response.body.length).toBe(2);
+      expect(response.body).toHaveLength(2);
     });
 
     test('Can Sign up and create a new account', async () => {
@@ -89,9 +85,9 @@ describe('user api tests', () => {
         config.get('JWT_ACCESS_TOKEN')
       ).id;
 
-      const _user = await User.findByPk(userId);
+      const sameUser = await User.findByPk(userId);
 
-      expect(_user.username).toBe('lookyloo');
+      expect(sameUser.username).toBe('lookyloo');
     });
 
     test('User can create new list with array of tasks', async () => {
@@ -113,7 +109,7 @@ describe('user api tests', () => {
 
       expect(response.body.listName).toBe('family');
       expect(response.body.listOwner).toBe(newUser.username);
-      expect(response.body.tasks.length).toBe(3);
+      expect(response.body.tasks).toHaveLength(3);
     });
 
     test('List owner can add a user to group', async () => {
@@ -140,6 +136,7 @@ describe('user api tests', () => {
 
       expect(response.body.id).toBe(otherUser.id);
       expect(response.body.username).toBe(otherUser.username);
+      // console.log(response.body);
       // expect(response.body.lists).toBe(true);
       // console.log(response.body.lists);
     });

@@ -248,16 +248,6 @@ describe('User model tests', () => {
     });
 
     test('User can create a list and become list owner', () => {
-      // const list = {
-      //   listName: 'family',
-      // };
-
-      // const tasks = [
-      //   { taskName: 'punch face' },
-      //   { taskName: 'college fund' },
-      //   { taskName: 'give hugs' },
-      // ];
-
       const list = {
         listName: 'family',
         tasks: [
@@ -313,21 +303,25 @@ describe('User model tests', () => {
         .then(([_newerUser, _newList, _newUser]) => {
           return _newUser.addUserToList(newerUser, newList);
         })
-        .then(() => {
-          return User.findByPk(newerUser.id, {
+        .then((userlist) => {
+          return User.findByPk(userlist.userId, {
             include: [
               {
                 model: List,
-                where: { id: newList.id },
+                include: [{ model: User }, { model: Task }],
               },
             ],
           });
         })
-        .then((foundUser) => {
-          return Promise.all([expect(foundUser.lists[0].id).toBe(newList.id)]);
+        .then((_user) => {
+          const findAddedUser = _user.lists[0].users.find(
+            (u) => u.id === _user.id
+          );
+
+          expect(findAddedUser.id).toBe(newerUser.id);
         })
         .catch((e) => {
-          throw Error(`Adding user to group failed: ${e.message}`);
+          throw Error(`Adding user to list failed: ${e.message}`);
         });
     });
   });
