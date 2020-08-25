@@ -1,4 +1,6 @@
+/* eslint-disable func-names */
 const db = require('../db');
+
 const { Sequelize } = db;
 const Task = require('./Task');
 const User = require('./User');
@@ -46,14 +48,10 @@ const List = db.define('list', {
 // instance methods
 List.prototype.createNewTasks = function (tasks) {
   return createdSeedInstances(Task, tasks)
-    .then((tasks) => {
-      return this.setTasks(tasks);
-    })
-    .then((list) => {
-      return List.findByPk(list.id, {
+    .then((_tasks) => this.addTasks(_tasks))
+    .then((list) => List.findByPk(list.id, {
         include: [{ model: Task }, { model: User }],
-      }).then((_list) => _list);
-    })
+      }).then((_list) => _list))
     .catch((e) => {
       throw e;
     });

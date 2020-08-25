@@ -1,12 +1,10 @@
-const { List } = require('../../server/db/models/');
+const { List } = require("../../server/db/models");
 const db = require('../../server/db/db');
 
-const { validationTester } = require('../../tests/testHelperFunctions');
+const { validationTester } = require("../testHelperFunctions");
 
 describe('List model tests', () => {
-  beforeAll(() => {
-    return db.sync({ force: true });
-  });
+  beforeAll(() => db.sync({ force: true }));
 
   let newList;
   beforeEach(() => {
@@ -19,9 +17,7 @@ describe('List model tests', () => {
    *  empty the tables after each spec
    */
 
-  afterEach(() => {
-    return Promise.all([List.truncate({ cascade: true })]);
-  });
+  afterEach(() => Promise.all([List.truncate({ cascade: true })]));
 
   describe('attributes definition', () => {
     test('Includes `id`, `listName` fields', () => {
@@ -74,12 +70,8 @@ describe('List model tests', () => {
 
       return newList
         .save()
-        .then((_list) => {
-          return _list.createNewTasks(tasks);
-        })
-        .then((_list_) => {
-          return expect(_list_.tasks.length).toBe(3);
-        })
+        .then((_list) => _list.createNewTasks(tasks))
+        .then((_list_) => expect(_list_.tasks).toHaveLength(3))
         .catch((e) => {
           throw Error(
             `Creating and adding new tasks to current list failed: ${e.message}`

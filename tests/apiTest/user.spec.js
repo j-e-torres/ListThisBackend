@@ -1,3 +1,4 @@
+/* eslint-disable node/no-unpublished-require */
 const jwt = require('jwt-simple');
 const app = require('supertest')(require('../../server/app'));
 const db = require('../../server/db/db');
@@ -16,10 +17,12 @@ describe('user api tests', () => {
     });
   });
 
-  afterEach(() => Promise.all([
+  afterEach(() =>
+    Promise.all([
       User.truncate({ cascade: true }),
       List.truncate({ cascade: true }),
-    ]));
+    ])
+  );
 
   describe('Auth routes', () => {
     test('User can login', async () => {
