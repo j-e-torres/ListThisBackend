@@ -3,9 +3,7 @@ const db = require('../../server/db/db');
 const { List, Task } = require('../../server/db/models');
 
 describe('list api tests', () => {
-  beforeAll(() => {
-    return db.sync({ force: true });
-  });
+  beforeAll(() => db.sync({ force: true }));
 
   let newList;
   beforeEach(() => {
@@ -18,15 +16,16 @@ describe('list api tests', () => {
    * Also, we empty the tables after each spec
    */
 
-  afterEach(() => {
-    return Promise.all([
+  afterEach(() => Promise.all([
       List.truncate({ cascade: true }),
       Task.truncate({ cascade: true }),
-    ]);
-  });
+    ]));
 
   test('get all lists', async () => {
-    await app.get('/api/lists').expect(200);
+    const response = await app.get('/api/lists').expect(200);
+
+    expect(response.body.length).toBeGreaterThan(1);
+
   });
 
   test('Get all tasks that belong to a list', async () => {
@@ -50,7 +49,7 @@ describe('list api tests', () => {
       .get(`/api/lists/${newList.id}/tasks`)
       .expect(200);
 
-    expect(response.body.length).toBe(3);
+    expect(response.body).toHaveLength(3);
   });
 
   test('Create and add array of new tasks to list', async () => {
@@ -73,7 +72,7 @@ describe('list api tests', () => {
       .send(tasks)
       .expect(200);
 
-    expect(response.body.tasks.length).toBe(3);
+    expect(response.body.tasks).toHaveLength(3);
   });
 
   test('can update list notes', async () => {

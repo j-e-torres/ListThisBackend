@@ -43,12 +43,12 @@ router.post('/:userId/lists', (req, res, next) => {
     .then((user) => {
       return user.createNewList(req.body);
     })
-    .then((list) =>
-      List.findByPk(list.id, {
+    .then((list) => {
+      return List.findByPk(list.id, {
         include: [{ model: User }, { model: Task }],
-      }).then((_list) => _list)
-    )
-    .then((__list) => res.send(__list))
+      }).then((__list) => __list);
+    })
+    .then((_list) => res.send(_list))
     .catch(next);
 });
 
@@ -65,7 +65,7 @@ router.post('/:userId/lists/:listId', async (req, res, next) => {
       return listOwner.addUserToList(addUser, list);
     })
     .then((userlist) => {
-      return User.findByPk(userlist[0].userId, {
+      return User.findByPk(userlist.userId, {
         include: [
           {
             model: List,
