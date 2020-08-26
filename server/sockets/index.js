@@ -3,7 +3,7 @@ module.exports = (socketIO) => {
     console.log('socket connected');
     socket.emit('errrar');
 
-    socket.on('new-list', (lists) => {
+    socket.on('new-lists', (lists) => {
       socket.emit('new-lists', lists);
     });
   });
