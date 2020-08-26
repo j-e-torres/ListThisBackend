@@ -1,4 +1,5 @@
 const express = require('express');
+
 const app = express();
 app.use(express.json());
 const cors = require('cors');
@@ -9,7 +10,7 @@ app.use((req, res, next) => {
     return next();
   }
 
-  User.exchangeTokenForUser(req.headers.authorization)
+  return User.exchangeTokenForUser(req.headers.authorization)
     .then((user) => {
       req.user = user;
       next();
@@ -27,7 +28,7 @@ app.use((req, res, next) => {
   next(err);
 });
 
-//error handling
+// error handling
 app.use((error, req, res, next) => {
   let errors;
   if (error.errors) {
