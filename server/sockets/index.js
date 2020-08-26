@@ -1,7 +1,10 @@
-module.exports = socketIO => {
-  socketIO.on('connection', socket => {
-    socket.on('new-list', list => {
-      socket.broadcast.emit('new-list', list)
-    })
-  })
-}
+module.exports = (socketIO) => {
+  socketIO.on('connection', (socket) => {
+    console.log('socket connected');
+    socket.emit('errrar');
+
+    socket.on('new-list', (lists) => {
+      socket.emit('new-lists', lists);
+    });
+  });
+};
