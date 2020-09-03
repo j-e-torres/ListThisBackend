@@ -91,6 +91,7 @@ describe('list api tests', () => {
       .send(notes)
       .expect(200);
 
+    console.log('api list updatenotes', response.body)
     expect(response.body.listNotes).toBe('buy 3 of each');
     // expect(response.body.listId).toBe(newList.id);
   });

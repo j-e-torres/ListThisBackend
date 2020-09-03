@@ -1,14 +1,13 @@
-const { User, List, Task } = require('../../server/db/models/');
-const db = require('../../server/db/db');
+/* eslint-disable jest/expect-expect */
 const jwt = require('jwt-simple');
+const { User, List, Task } = require("../../server/db/models");
+const db = require('../../server/db/db');
 const config = require('../../config');
 
 const { validationTester } = require('../testHelperFunctions');
 
 describe('User model tests', () => {
-  beforeAll(() => {
-    return db.sync({ force: true });
-  });
+  beforeAll(() => db.sync({ force: true }));
 
   let newUser;
   beforeEach(() => {
@@ -19,12 +18,10 @@ describe('User model tests', () => {
     });
   });
 
-  afterEach(() => {
-    return Promise.all([
+  afterEach(() => Promise.all([
       User.truncate({ cascade: true }),
       List.truncate({ cascade: true }),
-    ]);
-  });
+    ]));
 
   describe('attributes definition', () => {
     test('Includes `id`, `username`, `password`, `displayName` fields', () => {
@@ -190,7 +187,7 @@ describe('User model tests', () => {
         password: 'La1La1',
       };
 
-      let authenticatedUser, error;
+      let authenticatedUser; let error;
 
       try {
         authenticatedUser = await User.authenticate(credentials);
@@ -213,7 +210,7 @@ describe('User model tests', () => {
         password: 'La1La1e',
       };
 
-      let authenticatedUser, error;
+      let authenticatedUser; let error;
 
       try {
         authenticatedUser = await User.authenticate(credentials);
@@ -236,9 +233,7 @@ describe('User model tests', () => {
       };
 
       return User.signUp(signUpCredentials)
-        .then((token) => {
-          return User.exchangeTokenForUser(token);
-        })
+        .then((token) => User.exchangeTokenForUser(token))
         .then((user) => expect(user.username).toBe('princess'))
         .catch((e) => {
           throw Error(
@@ -259,11 +254,8 @@ describe('User model tests', () => {
 
       return newUser
         .save()
-        .then((_user) => {
-          return _user.createNewList(list);
-        })
-        .then((list) => {
-          return List.findByPk(list.id, {
+        .then((_user) => _user.createNewList(list))
+        .then((list) => List.findByPk(list.id, {
             include: [
               {
                 model: User,
@@ -273,15 +265,12 @@ describe('User model tests', () => {
                 model: Task,
               },
             ],
-          });
-        })
-        .then((foundList) => {
-          return Promise.all([
+          }))
+        .then((foundList) => Promise.all([
             expect(foundList.users[0].username).toBe(newUser.username),
             expect(foundList.listOwner).toBe(newUser.username),
-            expect(foundList.tasks.length).toBe(3),
-          ]);
-        })
+            expect(foundList.tasks).toHaveLength(3),
+          ]))
         .catch((e) => {
           throw Error(`Creating a list failed due to: ${e.message}`);
         });
@@ -300,19 +289,15 @@ describe('User model tests', () => {
       });
 
       return Promise.all([newerUser.save(), newList.save(), newUser.save()])
-        .then(([_newerUser, _newList, _newUser]) => {
-          return _newUser.addUserToList(newerUser, newList);
-        })
-        .then((userlist) => {
-          return User.findByPk(userlist.userId, {
+        .then(([_newerUser, _newList, _newUser]) => _newUser.addUserToList(newerUser, newList))
+        .then((userlist) => User.findByPk(userlist.userId, {
             include: [
               {
                 model: List,
                 include: [{ model: User }, { model: Task }],
               },
             ],
-          });
-        })
+          }))
         .then((_user) => {
           const findAddedUser = _user.lists[0].users.find(
             (u) => u.id === _user.id
