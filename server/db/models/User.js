@@ -1,4 +1,5 @@
 const db = require('../db');
+
 const { Sequelize } = db;
 const bcrypt = require('bcrypt');
 const jwt = require('jwt-simple');
@@ -81,7 +82,7 @@ const User = db.define(
     },
 
     hooks: {
-      beforeSave: function (user) {
+      beforeSave (user) {
         if (user.password) {
           return bcrypt
             .hash(user.password, 5)
@@ -149,9 +150,7 @@ User.authenticate = function ({ username, password }) {
 
 User.signUp = function ({ username, password, displayName }) {
   return User.create({ username, password, displayName })
-    .then((user) => {
-      return jwt.encode({ id: user.id }, config.get('JWT_ACCESS_TOKEN'));
-    })
+    .then((user) => jwt.encode({ id: user.id }, config.get('JWT_ACCESS_TOKEN')))
     .catch((e) => {
       throw e;
     });
@@ -163,15 +162,11 @@ User.prototype.createNewList = function (list) {
     this.createList(list),
     createdSeedInstances(Task, list.tasks),
   ])
-    .then(([_list, tasks]) => {
-      return Promise.all([
+    .then(([_list, tasks]) => Promise.all([
         _list.update({ listOwner: this.username }),
         _list.setTasks(tasks),
-      ]);
-    })
-    .then(([updateList, tasksList]) => {
-      return tasksList;
-    })
+      ]))
+    .then(([updateList, tasksList]) => tasksList)
     .catch((e) => {
       throw e;
     });
@@ -181,12 +176,10 @@ User.prototype.addUserToList = function (newUser, list) {
   newUser.username.toLowerCase();
 
   if (list.listOwner === this.username) {
-    return newUser.addList(list).then((userlist) => {
-      return userlist[0];
-    });
-  } else {
+    return newUser.addList(list).then((userlist) => userlist[0]);
+  } 
     throw new Error('User is not a list owner');
-  }
+  
 };
 
 module.exports = User;
