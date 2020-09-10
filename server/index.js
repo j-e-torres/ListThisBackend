@@ -10,9 +10,5 @@ const socketServer = io(server);
 
 require('./sockets')(socketServer);
 
-if (process.env.NODE_ENV === 'development') {
-  syncAndSeed().then(() => server);
-} else {
-  return server;
-}
+syncAndSeed().then(() => server);
 
