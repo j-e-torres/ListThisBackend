@@ -1,3 +1,4 @@
+/* eslint-disable jest/expect-expect */
 const { List } = require("../../server/db/models");
 const db = require('../../server/db/db');
 

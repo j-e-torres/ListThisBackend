@@ -30,6 +30,9 @@ router.put('/:listId/notes', (req, res, next) => {
       {
         model: Task,
       },
+      {
+        model: User
+      }
     ],
   })
     .then((list) => list.update(req.body))
