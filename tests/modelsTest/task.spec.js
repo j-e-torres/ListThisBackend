@@ -1,7 +1,7 @@
 const { Task } = require('../../server/db/models/');
 const db = require('../../server/db/db');
 
-const validationTester = require('../testHelperFunctions');
+const { validationTester } = require('../testHelperFunctions');
 
 describe('Task model test', () => {
   beforeAll(() => {

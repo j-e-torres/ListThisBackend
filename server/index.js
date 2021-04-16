@@ -10,8 +10,8 @@ const server = app.listen(PORT, () => console.log(`http://localhost:${PORT}`));
 
 // require('./sockets')(socketServer);
 
-if (process.env.NODE_ENV === 'development') {
-  syncAndSeed().then(() => server);
-}
+// if (process.env.NODE_ENV === 'development') {
+//   syncAndSeed().then(() => server);
+// }
 
-return server;
+return syncAndSeed().then(() => server);
