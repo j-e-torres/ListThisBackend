@@ -1,0 +1,27 @@
+{
+  "name": "list-this_api",
+  "version": "1.0.0",
+  "description": "API for ListThis",
+  "main": "app.js",
+  "scripts": {
+    "start": "NODE_ENV=production node ./app.js",
+    "start:dev": "nodemon ./app.js"
+  },
+  "author": "Juan",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv-safe": "^6.1.0",
+    "express": "^4.17.1",
+    "helmet": "^4.5.0",
+    "morgan": "^1.10.0",
+    "pg": "^8.6.0",
+    "sequelize": "^6.6.2"
+  },
+  "devDependencies": {
+    "eslint-plugin-jest": "^24.3.5",
+    "jest": "^26.6.3",
+    "nodemon": "^2.0.7",
+    "supertest": "^6.1.3"
+  }
+}
