@@ -1,4 +1,5 @@
 const Sequelize = require('sequelize');
+const bcryptjs = require('bcryptjs');
 const { db } = require('../../config/sequelize');
 
 const User = db.define(
@@ -28,7 +29,7 @@ const User = db.define(
         },
         isAlphanumeric: {
           args: true,
-          msg: 'Username must consist of letters or numbers.',
+          msg: 'Username must consist of letters or numbers',
         },
       },
     },
@@ -61,7 +62,7 @@ const User = db.define(
         },
         notEmpty: {
           args: true,
-          msg: 'Display name cannot be empty',
+          msg: 'Display name required',
         },
       },
     },
@@ -75,7 +76,15 @@ const User = db.define(
     },
 
     hooks: {
-      beforeSave: {},
+      async beforeSave(user) {
+        user.username = user.username.toLowerCase();
+
+        try {
+          user.password = await bcryptjs.hash(user.password, 12);
+        } catch (error) {
+          console.error(error);
+        }
+      },
     },
   }
 );

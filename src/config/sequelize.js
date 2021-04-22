@@ -1,4 +1,4 @@
-const Sequelize = require('sequelize');
+const { Sequelize } = require('sequelize');
 const { postgres } = require('./vars');
 
 const db = new Sequelize(postgres.uri, {
