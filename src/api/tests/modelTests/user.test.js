@@ -17,11 +17,36 @@ describe('User model test', () => {
   afterEach(() => Promise.all([User.truncate({ cascade: true })]));
 
   describe('User attributes section', () => {
-    test('Should have following attributes: `id`, `username`, `password`, `displayName`', () => {
+    test('Should have following attributes: `id`, `role`, `username`, `password`, `displayName`', () => {
       expect(newUser).toHaveProperty('id');
+      expect(newUser).toHaveProperty('role');
       expect(newUser).toHaveProperty('username');
       expect(newUser).toHaveProperty('password');
       expect(newUser).toHaveProperty('displayName');
+    });
+
+    describe('role property', () => {
+      test('`defaultValue` should be `user`', async () => {
+        await newUser.save();
+
+        const found = await User.findByPk(newUser.id);
+
+        expect(found.role).toBe('user');
+      });
+
+      test('Should report an error if outside enum values of `[ user, admin ]`', async () => {
+        newUser.role = 'batman';
+
+        let errorResult;
+
+        try {
+          await newUser.save();
+        } catch (error) {
+          [errorResult] = error.errors;
+        }
+
+        expect(errorResult.message).toBe('Invalid User role');
+      });
     });
 
     describe('Username property', () => {

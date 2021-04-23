@@ -3,6 +3,8 @@ const Sequelize = require('sequelize');
 const bcryptjs = require('bcryptjs');
 const { db } = require('../../config/sequelize');
 
+const roles = ['user', 'admin'];
+
 const User = db.define(
   'user',
   {
@@ -11,6 +13,18 @@ const User = db.define(
       allowNull: false,
       primaryKey: true,
       defaultValue: Sequelize.UUIDV4,
+    },
+
+    role: {
+      type: Sequelize.ENUM,
+      values: roles,
+      defaultValue: 'user',
+      validate: {
+        isIn: {
+          args: [roles],
+          msg: 'Invalid User role',
+        },
+      },
     },
 
     username: {

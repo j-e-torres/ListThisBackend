@@ -16,6 +16,7 @@ app.use(helmet());
 
 app.use(cors());
 
+// mount api v1 routes
 app.use('/v1', routes);
 
 // app.use((req, res, next) => {

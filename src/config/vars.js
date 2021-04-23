@@ -10,6 +10,9 @@ module.exports = {
   env: process.env.NODE_ENV,
   port: process.env.PORT,
   postgres: {
-    uri: process.env.DATABASE_URL || process.env.SEQUELIZE_URI,
+    uri:
+      process.env.NODE_ENV === 'test'
+        ? process.env.SEQUELIZE_URI_TESTS
+        : process.env.DATABASE_URL || process.env.SEQUELIZE_URI,
   },
 };
