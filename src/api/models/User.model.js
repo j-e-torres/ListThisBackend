@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 const Sequelize = require('sequelize');
 const bcryptjs = require('bcryptjs');
 const { db } = require('../../config/sequelize');

@@ -2,7 +2,7 @@ const bcryptjs = require('bcryptjs');
 const { User } = require('../../models');
 const { db } = require('../../../config/sequelize');
 
-describe('User model test', () => {
+describe.skip('User model test', () => {
   beforeAll(() => db.sync({ force: true }));
 
   let newUser;
@@ -16,7 +16,7 @@ describe('User model test', () => {
 
   afterEach(() => Promise.all([User.truncate({ cascade: true })]));
 
-  describe('Model attributes section', () => {
+  describe('User attributes section', () => {
     test('Should have following attributes: `id`, `username`, `password`, `displayName`', () => {
       expect(newUser).toHaveProperty('id');
       expect(newUser).toHaveProperty('username');
