@@ -2,7 +2,7 @@ const bcryptjs = require('bcryptjs');
 const { User } = require('../../models');
 const { db } = require('../../../config/sequelize');
 
-describe.skip('User model test', () => {
+describe('User model test', () => {
   beforeAll(() => db.sync({ force: true }));
 
   let newUser;
