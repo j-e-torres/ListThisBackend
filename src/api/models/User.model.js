@@ -1,7 +1,10 @@
 /* eslint-disable no-param-reassign */
 const Sequelize = require('sequelize');
 const bcryptjs = require('bcryptjs');
+const jwt = require('jwt-simple');
+const httpStatus = require('http-status');
 const { db } = require('../../config/sequelize');
+const { jwtSecret } = require('../../config/vars');
 
 const roles = ['user', 'admin'];
 
@@ -101,7 +104,48 @@ const User = db.define(
         }
       },
     },
+
+    scopes: {
+      login: {},
+    },
   }
 );
+
+// model methods
+User.authenticate = async function authenticate(options) {
+  const { username, password } = options;
+  if (!username)
+    throw new Error({
+      message: 'An email is required to generate a token',
+    });
+
+  const user = await this.scope('login').findOne({ where: { username } });
+  const err = {
+    status: httpStatus.UNAUTHORIZED,
+    isPublic: true,
+  };
+
+  if (password) {
+    if (user && (await user.passwordMatches(password))) {
+      return { user, accessToken: user.token() };
+    }
+
+    err.message = 'Incorrect email or password';
+  }
+
+  throw new Error(err);
+};
+
+// instance methods
+User.prototype.token = function token() {
+  const playload = {
+    id: this.id,
+  };
+  return jwt.encode(playload, jwtSecret);
+};
+
+User.prototype.passwordMatches = function passwordMatches(password) {
+  return bcryptjs.compare(password, this.password);
+};
 
 module.exports = User;

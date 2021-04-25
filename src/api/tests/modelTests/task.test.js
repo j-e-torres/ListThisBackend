@@ -1,7 +1,7 @@
 const { Task } = require('../../models');
 const { db } = require('../../../config/sequelize');
 
-describe('List model test', () => {
+describe.skip('Task model test', () => {
   beforeAll(() => db.sync({ force: true }));
 
   let newTask;

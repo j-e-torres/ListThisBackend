@@ -1,13 +1,14 @@
 const { List } = require('../../models');
 const { db } = require('../../../config/sequelize');
 
-describe('List model test', () => {
+describe.skip('List model test', () => {
   beforeAll(() => db.sync({ force: true }));
 
   let newList;
   beforeEach(() => {
     newList = List.build({
       listName: 'trader joes',
+      listOwner: 'jacob',
     });
   });
 
@@ -22,6 +23,16 @@ describe('List model test', () => {
     });
 
     describe('listName property', () => {
+      test('Should trim `List name`', async () => {
+        newList.listName = '  list ';
+
+        await newList.save();
+
+        const list = await List.findByPk(newList.id);
+
+        expect(list.listName).toBe('list');
+      });
+
       test('Should report `List name required` when listName is null', async () => {
         newList.listName = null;
 
@@ -72,6 +83,22 @@ describe('List model test', () => {
         const foundList = await List.findByPk(newList.id);
 
         expect(foundList.listNotes).toBe('');
+      });
+    });
+
+    describe('listOwner property', () => {
+      test('Should report `List owner missing` when listOwner is null', async () => {
+        newList.listOwner = null;
+
+        let errorResult;
+
+        try {
+          await newList.validate();
+        } catch (error) {
+          [errorResult] = error.errors;
+        }
+
+        expect(errorResult.message).toBe('List owner missing');
       });
     });
   });

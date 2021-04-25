@@ -11,6 +11,12 @@ const List = db.define('list', {
 
   listOwner: {
     type: Sequelize.STRING,
+    allowNull: false,
+    validate: {
+      notNull: {
+        msg: 'List owner missing',
+      },
+    },
   },
 
   listName: {
@@ -24,6 +30,12 @@ const List = db.define('list', {
         args: true,
         msg: 'List name required',
       },
+    },
+
+    set(value) {
+      if (typeof value === 'string') {
+        this.setDataValue('listName', value.trim());
+      } else this.setDataValue('listName', value);
     },
   },
 

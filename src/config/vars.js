@@ -15,4 +15,5 @@ module.exports = {
         ? process.env.SEQUELIZE_URI_TESTS
         : process.env.DATABASE_URL || process.env.SEQUELIZE_URI,
   },
+  jwtSecret: process.env.JWT_SECRET,
 };

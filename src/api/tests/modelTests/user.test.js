@@ -1,6 +1,8 @@
 const bcryptjs = require('bcryptjs');
+const jwt = require('jwt-simple');
 const { User } = require('../../models');
 const { db } = require('../../../config/sequelize');
+const { jwtSecret } = require('../../../config/vars');
 
 describe('User model test', () => {
   beforeAll(() => db.sync({ force: true }));
@@ -199,6 +201,30 @@ describe('User model test', () => {
 
         expect(errorResult.message).toBe('Display name required');
       });
+    });
+  });
+
+  describe('User functions', () => {
+    test('Should be able to create a token', async () => {
+      const token = await newUser.token();
+      const decoded = await jwt.decode(token, jwtSecret);
+
+      expect(decoded.id).toBe(newUser.id);
+    });
+
+    test('Should be able to authenticate a user', async () => {
+      const token = await newUser.token();
+      await newUser.save();
+      const authenticated = await User.authenticate({
+        username: 'ubern00bi3',
+        password: 'La1La1',
+      });
+
+      expect(authenticated).toHaveProperty('user');
+      expect(authenticated).toHaveProperty('accessToken');
+
+      expect(authenticated.user.username).toBe(newUser.username);
+      expect(authenticated.accessToken).toBe(token);
     });
   });
 });
