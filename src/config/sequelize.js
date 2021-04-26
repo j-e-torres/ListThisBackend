@@ -6,16 +6,17 @@ const db = new Sequelize(postgres.uri, {
   dialect: 'postgres',
 });
 
-const connect = () => {
-  db.authenticate()
-    .then(() => db.sync())
-    .then(() => console.log('Sequelize Postgres connected '))
-    .then(() => db.close())
+const connect = () =>
+  db
+    .authenticate()
+    .then(async () => {
+      console.log('Sequelize Postgres connected');
+      await db.sync();
+    })
     .catch((err) => {
-      console.log(err);
-      db.close();
+      console.log('1111111111 Sequelize connect error', err);
+      // db.close();
     });
-};
 
 module.exports = {
   connect,

@@ -5,8 +5,7 @@ const jwt = require('jwt-simple');
 const httpStatus = require('http-status');
 const { db } = require('../../config/sequelize');
 const { jwtSecret } = require('../../config/vars');
-
-const roles = ['user', 'admin'];
+const { roles } = require('../utils/constants');
 
 const User = db.define(
   'user',
@@ -114,10 +113,11 @@ const User = db.define(
 // model methods
 User.authenticate = async function authenticate(options) {
   const { username, password } = options;
-  if (!username)
+  if (!username) {
     throw new Error({
       message: 'An email is required to generate a token',
     });
+  }
 
   const user = await this.scope('login').findOne({ where: { username } });
   const err = {
