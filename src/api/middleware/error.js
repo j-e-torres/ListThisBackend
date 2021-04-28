@@ -4,7 +4,6 @@ const { env } = require('../../config/vars');
 
 /**
  * Error handler. Send stacktrace only during development
- * @public
  */
 const handler = (err, req, res, next) => {
   const response = {

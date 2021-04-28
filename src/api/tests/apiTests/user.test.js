@@ -6,10 +6,6 @@ const { User } = require('../../models');
 const { populateTestDB, cleanDB } = require('../utils');
 
 describe('User API routes', () => {
-  // beforeAll(async () => {
-  //   await db.sync({ force: true });
-  // });
-
   const dbUsers = {};
   const password = '123456';
   let user;
@@ -61,9 +57,10 @@ describe('User API routes', () => {
         const resp = await request(app)
           .get('/v1/users')
           .set('Authorization', `Bearer ${userAccessToken}`)
-          .expect(httpStatus.OK);
+          .expect(httpStatus.FORBIDDEN);
 
-        console.log('11111111', resp);
+        expect(resp.body.code).toBe(403);
+        expect(resp.body.message).toBe('You do not have permission to do this');
       });
     });
   });

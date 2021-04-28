@@ -2,17 +2,21 @@ const httpStatus = require('http-status');
 const jwt = require('jwt-simple');
 const { User } = require('../models');
 const { jwtSecret } = require('../../config/vars');
-const APIError = require('../middleware/error');
+const APIError = require('../utils/APIError');
 
 const ADMIN = 'admin';
 const LOGGED_USER = '_loggedUser';
 
 const authorized = [ADMIN];
 
-exports.authenticate = async (err, req, res, next) => {
-  let token;
+const apiError = new APIError({
+  message: 'Unauthorized',
+  status: httpStatus.UNAUTHORIZED,
+  isPublic: true,
+});
 
-  console.log('wowowowowow');
+exports.authenticate = async (req, res, next) => {
+  let token;
 
   // 1) get token and check if it exists
   if (
@@ -24,7 +28,7 @@ exports.authenticate = async (err, req, res, next) => {
   }
 
   if (!token) {
-    return next(new Error('You are not logged in'));
+    return next(apiError);
   }
 
   // 2) verify token
@@ -34,7 +38,8 @@ exports.authenticate = async (err, req, res, next) => {
   const currentUser = await User.findByPk(decoded.id);
 
   if (!currentUser) {
-    return next(new Error('User with this token no longer exists'));
+    apiError.message = 'User with this token no longer exists';
+    return next(apiError);
   }
 
   // 4) if user changed password after token issued
@@ -50,10 +55,10 @@ exports.authenticate = async (err, req, res, next) => {
 };
 
 exports.authorize = (roles = authorized) => (req, res, next) => {
-  console.log('hohohooohoho');
-
   if (!roles.includes(req.user.role)) {
-    return next(new Error('You do not have permission to do this'));
+    apiError.message = 'You do not have permission to do this';
+    apiError.status = httpStatus.FORBIDDEN;
+    return next(apiError);
   }
 
   return next();
