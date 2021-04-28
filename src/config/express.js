@@ -3,6 +3,7 @@ const morgan = require('morgan');
 const cors = require('cors');
 const helmet = require('helmet');
 const routes = require('../api/routes/v1');
+const error = require('../api/middleware/error');
 
 const app = express();
 
@@ -19,25 +20,10 @@ app.use(cors());
 // mount api v1 routes
 app.use('/v1', routes);
 
-// app.use((req, res, next) => {
-//   const err = new Error('No Page Found');
-//   err.status = 404;
-//   next(err);
-// });
+// catch 404 and forward to error handler
+// app.use(error.notFound);
 
-// // error handling
-// app.use((error, req, res, next) => {
-//   let errors;
-//   if (error.errors) {
-//     errors = error.errors.map((err) => err.message);
-//   } else if (error.original) {
-//     errors = [error.original.message];
-//   } else {
-//     errors = [error.message];
-//   }
-
-//   // console.error(errors);
-//   res.status(error.status || 500).send({ errors });
-// });
+// // error handler, send stacktrace only during development
+// app.use(error.handler);
 
 module.exports = app;

@@ -47,19 +47,19 @@ exports.populateTestDB = async () => {
     },
   };
 
-  const superman = User.build(dbUsers.superman);
-  const wondergirl = User.build(dbUsers.wondergirl);
-  const traderjoes = List.build(dbLists.traderjoes);
-  const keyfood = List.build(dbLists.keyfood);
-  const apples = Task.build(dbTasks.apples);
-  const oranges = Task.build(dbTasks.oranges);
+  const superman = await User.create(dbUsers.superman);
+  const wondergirl = await User.create(dbUsers.wondergirl);
+  const traderjoes = await List.create(dbLists.traderjoes);
+  const keyfood = await List.create(dbLists.keyfood);
+  const apples = await Task.create(dbTasks.apples);
+  const oranges = await Task.create(dbTasks.oranges);
 
-  await superman.save();
-  await wondergirl.save();
-  await traderjoes.save();
-  await keyfood.save();
-  await apples.save();
-  await oranges.save();
+  // await superman.save();
+  // await wondergirl.save();
+  // await traderjoes.save();
+  // await keyfood.save();
+  // await apples.save();
+  // await oranges.save();
 
   const adminAccessToken = (
     await User.authenticate({

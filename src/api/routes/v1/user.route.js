@@ -9,7 +9,7 @@ router
   .route('/')
   .get(
     authMiddleware.authenticate,
-    authMiddleware.authorize,
+    authMiddleware.authorize(),
     userController.getUsers
   );
 

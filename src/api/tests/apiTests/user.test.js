@@ -6,7 +6,9 @@ const { User } = require('../../models');
 const { populateTestDB, cleanDB } = require('../utils');
 
 describe('User API routes', () => {
-  // beforeAll(() => db.sync({ force: true }));
+  // beforeAll(async () => {
+  //   await db.sync({ force: true });
+  // });
 
   const dbUsers = {};
   const password = '123456';
@@ -24,14 +26,6 @@ describe('User API routes', () => {
   // let newUser;
 
   beforeEach(async () => {
-    // newUser = User.build({
-    //   username: 'ubern00bi3',
-    //   password: 'La1La1',
-    //   displayName: 'fishy',
-    // });
-
-    jest.setTimeout(15000);
-
     const { tokens, users, lists, tasks } = await populateTestDB();
 
     [adminAccessToken, userAccessToken] = tokens;
@@ -47,38 +41,29 @@ describe('User API routes', () => {
   describe('GET routes', () => {
     describe('GET /v1/users', () => {
       test('Should get all users for admin', async () => {
-        let resp;
-        try {
-          resp = await request(app)
-            .get('/v1/users')
-            .set('Authorization', `Bearer ${adminAccessToken}`)
-            .expect(httpStatus.OK);
-        } catch (error) {
-          console.log('222222', error);
-          console.error(error);
-        }
+        const resp = await request(app)
+          .get('/v1/users')
+          .set('Authorization', `Bearer ${adminAccessToken}`)
+          .expect(httpStatus.OK);
 
-        expect(resp).toHaveLength(2);
+        const { status, results, data } = resp.body;
 
-        // .then(async (res) => {
-        // before comparing it is necessary to convert String to Date
-        // res.body[0].createdAt = new Date(res.body[0].createdAt);
-        // res.body[1].createdAt = new Date(res.body[1].createdAt);
+        const firstUser = data.users.find((u) => u.username === 'superman200');
+        const secondUser = data.users.find((u) => u.username === 'wondergirl');
 
-        // const includesBranStark = !!find(
-        //   res.body,
-        //   ({ email }) => bran.email === email
-        // );
-        // const includesjonSnow = !!find(
-        //   res.body,
-        //   ({ email }) => john.email === email
-        // );
+        expect(status).toBe(httpStatus.OK);
+        expect(results).toBe(2);
+        expect(firstUser.username).toBe('superman200');
+        expect(secondUser.username).toBe('wondergirl');
+      });
 
-        // expect(res.body).to.be.an('array');
-        // expect(res.body).to.have.lengthOf(2);
-        // expect(includesBranStark).to.be.true;
-        // expect(includesjonSnow).to.be.true;
-        // });
+      test('Should give error for non admin', async () => {
+        const resp = await request(app)
+          .get('/v1/users')
+          .set('Authorization', `Bearer ${userAccessToken}`)
+          .expect(httpStatus.OK);
+
+        console.log('11111111', resp);
       });
     });
   });
