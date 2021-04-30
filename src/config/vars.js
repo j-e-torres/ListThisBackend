@@ -16,4 +16,5 @@ module.exports = {
         : process.env.DATABASE_URL || process.env.SEQUELIZE_URI,
   },
   jwtSecret: process.env.JWT_SECRET,
+  jwtExpirationInterval: process.env.JWT_EXPIRATION_MINUTES,
 };
