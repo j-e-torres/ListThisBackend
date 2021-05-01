@@ -6,19 +6,9 @@ const { env } = require('../../config/vars');
  * Error handler. Send stacktrace only during development
  */
 const handler = (err, req, res, next) => {
-  // if (error.errors) {
-  //   errors = error.errors.map((err) => err.message);
-  // } else if (error.original) {
-  //   errors = [error.original.message];
-  // } else {
-  //   errors = [error.message];
-  // }
-
-  // console.error(errors);
-
   const response = {
-    status: err.status || 500,
-    message: err.message || httpStatus.INTERNAL_SERVER_ERROR,
+    status: err.status || httpStatus.INTERNAL_SERVER_ERROR,
+    message: err.message || httpStatus[err.status],
     errors: err.errors,
     stack: err.stack,
   };
@@ -27,7 +17,17 @@ const handler = (err, req, res, next) => {
     delete response.stack;
   }
 
-  res.status(err.status || 500).json(response);
+  switch (err.name) {
+    case 'SequelizeValidationError':
+      response.status = httpStatus.BAD_REQUEST;
+      response.message = httpStatus.BAD_REQUEST;
+      break;
+
+    default:
+      break;
+  }
+
+  res.status(response.status).json(response);
 };
 exports.handler = handler;
 

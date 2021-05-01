@@ -8,7 +8,7 @@ const { populateTestDB, cleanDB } = require('../utils');
 describe('Authentication API', () => {
   const password = 'La1La1';
 
-  let user;
+  let newUser;
   let admin;
   let adminAccessToken;
   let userAccessToken;
@@ -16,7 +16,7 @@ describe('Authentication API', () => {
   let wondergirl;
 
   beforeEach(async () => {
-    user = {
+    newUser = {
       username: 'ubern00bi3',
       password: 'La1La1',
       displayName: 'fishy',
@@ -36,14 +36,14 @@ describe('Authentication API', () => {
     it('should register a new user when request is ok', async () => {
       const res = await request(app)
         .post('/v1/auth/register')
-        .send(user)
+        .send(newUser)
         .expect(httpStatus.CREATED);
 
       expect(res.body.token).toHaveProperty('accessToken');
-      expect(res.body.data.user.username).toBe(user.username);
+      expect(res.body.data.user.username).toBe(newUser.username);
     });
 
-    it('should report error when email already exists', async () => {
+    it('should report error when `username` already exists', async () => {
       const wonderCreds = {
         username: 'wondergirl',
         displayName: 'wonder woman',
@@ -58,19 +58,34 @@ describe('Authentication API', () => {
       expect(res.body.errors[0].message).toBe('Username already in use!');
     });
 
-    // it('should report error when email and password are not provided', () => {
-    //   return request(app)
-    //     .post('/v1/auth/register')
-    //     .send({})
-    //     .expect(httpStatus.BAD_REQUEST)
-    //     .then((res) => {
-    //       const { field } = res.body.errors[0];
-    //       const { location } = res.body.errors[0];
-    //       const { messages } = res.body.errors[0];
-    //       expect(field).to.be.equal('email');
-    //       expect(location).to.be.equal('body');
-    //       expect(messages).to.include('"email" is required');
-    //     });
-    // });
+    it('should report error when `username`, `password`, and `displayName` are not provided', async () => {
+      const res = await request(app)
+        .post('/v1/auth/register')
+        .send({})
+        .expect(httpStatus.BAD_REQUEST);
+
+      const { errors } = res.body;
+      const messages = errors.reduce((acc, e) => {
+        acc.push(e.message);
+        return acc;
+      }, []);
+
+      expect(messages.includes('Username required')).toBe(true);
+      expect(messages.includes('Password required')).toBe(true);
+      expect(messages.includes('Display name required')).toBe(true);
+    });
+
+    it('should report error when `username` is not alphanumeric', async () => {
+      newUser.username = '1122_eee';
+
+      const res = await request(app)
+        .post('/v1/auth/register')
+        .send(newUser)
+        .expect(httpStatus.BAD_REQUEST);
+
+      expect(res.body.errors[0].message).toBe(
+        'Username must consist of letters or numbers'
+      );
+    });
   });
 });
