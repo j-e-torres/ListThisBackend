@@ -33,7 +33,7 @@ describe('Authentication API', () => {
   });
 
   describe('POST /v1/auth/register', () => {
-    it('should register a new user when request is ok', async () => {
+    test('should register a new user when request is ok', async () => {
       const res = await request(app)
         .post('/v1/auth/register')
         .send(newUser)
@@ -43,7 +43,7 @@ describe('Authentication API', () => {
       expect(res.body.data.user.username).toBe(newUser.username);
     });
 
-    it('should report error when `username` already exists', async () => {
+    test('should report error when `username` already exists', async () => {
       const wonderCreds = {
         username: 'wondergirl',
         displayName: 'wonder woman',
@@ -58,7 +58,7 @@ describe('Authentication API', () => {
       expect(res.body.errors[0].message).toBe('Username already in use!');
     });
 
-    it('should report error when `username`, `password`, and `displayName` are not provided', async () => {
+    test('should report error when `username`, `password`, and `displayName` are not provided', async () => {
       const res = await request(app)
         .post('/v1/auth/register')
         .send({})
@@ -75,7 +75,7 @@ describe('Authentication API', () => {
       expect(messages.includes('Display name required')).toBe(true);
     });
 
-    it('should report error when `username` is not alphanumeric', async () => {
+    test('should report error when `username` is not alphanumeric', async () => {
       newUser.username = '1122_eee';
 
       const res = await request(app)
@@ -86,6 +86,36 @@ describe('Authentication API', () => {
       expect(res.body.errors[0].message).toBe(
         'Username must consist of letters or numbers'
       );
+    });
+
+    test('should report error when `password` is not at least 6 length, upper/lower case, and 1 number', async () => {
+      newUser.password = '1Kldf';
+
+      const res = await request(app)
+        .post('/v1/auth/register')
+        .send(newUser)
+        .expect(httpStatus.BAD_REQUEST);
+
+      expect(res.body.errors[0].message).toBe(
+        'Password must be at least 6 characters long, lowercase/uppercase letters, at least 1 number.'
+      );
+    });
+  });
+
+  describe('POST /v1/auth/login', () => {
+    test('Should return `user` and `accessToken when request is ok', async () => {
+      const loginWonder = {
+        username: 'wondergirl',
+        password,
+      };
+
+      const res = await request(app)
+        .post('/v1/auth/login')
+        .send(loginWonder)
+        .expect(httpStatus.Ok);
+
+      expect(res.body.accessToken).toBe(userAccessToken);
+      expect(res.body.data.user.username).toBe(wondergirl.username);
     });
   });
 });

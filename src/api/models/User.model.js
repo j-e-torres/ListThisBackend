@@ -66,7 +66,7 @@ const User = db.define(
         is: {
           args: '^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{6,})',
           msg:
-            'Passwords must be at least 6 characters long, lowercase/uppercase letters, at least 1 number.',
+            'Password must be at least 6 characters long, lowercase/uppercase letters, at least 1 number.',
         },
       },
     },
