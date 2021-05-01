@@ -103,7 +103,7 @@ describe('Authentication API', () => {
   });
 
   describe('POST /v1/auth/login', () => {
-    test('Should return `user` and `accessToken when request is ok', async () => {
+    test('Should return `user` with `lists belonging to user` and `accessToken when request is ok', async () => {
       const loginWonder = {
         username: 'wondergirl',
         password,
@@ -112,10 +112,11 @@ describe('Authentication API', () => {
       const res = await request(app)
         .post('/v1/auth/login')
         .send(loginWonder)
-        .expect(httpStatus.Ok);
+        .expect(httpStatus.OK);
 
-      expect(res.body.accessToken).toBe(userAccessToken);
+      expect(res.body.token.accessToken).toBe(userAccessToken);
       expect(res.body.data.user.username).toBe(wondergirl.username);
+      expect(res.body.data.user).toHaveProperty('lists');
     });
   });
 });

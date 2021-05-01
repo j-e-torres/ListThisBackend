@@ -31,3 +31,21 @@ exports.register = async (req, res, next) => {
     await next(User.checkDuplicateEmail(error));
   }
 };
+
+exports.login = async (req, res, next) => {
+  try {
+    const { user, accessToken } = await User.authenticate(req.body);
+
+    const token = createResponseToken(user, accessToken);
+
+    return res.status(httpStatus.OK).json({
+      status: httpStatus.OK,
+      token,
+      data: {
+        user,
+      },
+    });
+  } catch (error) {
+    return next(error);
+  }
+};

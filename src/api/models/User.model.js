@@ -7,6 +7,7 @@ const { db } = require('../../config/sequelize');
 const { jwtSecret } = require('../../config/vars');
 const { roles } = require('../utils/constants');
 const APIError = require('../utils/APIError');
+const List = require('../models/List.model');
 
 const User = db.define(
   'user',
@@ -114,27 +115,35 @@ const User = db.define(
 // model methods
 User.authenticate = async function authenticate(options) {
   const { username, password } = options;
-  if (!username) {
-    throw new Error({
-      message: 'An email is required to generate a token',
+
+  if (!username || !password) {
+    throw new APIError({
+      status: httpStatus.BAD_REQUEST,
+      message: 'Incorrect username or password',
+      isPublic: true,
     });
   }
 
-  const user = await this.scope('login').findOne({ where: { username } });
-  const err = {
-    status: httpStatus.UNAUTHORIZED,
-    isPublic: true,
-  };
+  try {
+    const user = await this.scope('login').findOne({
+      where: { username },
+      include: [
+        {
+          model: List,
+        },
+      ],
+    });
 
-  if (password) {
     if (user && (await user.passwordMatches(password))) {
       return { user, accessToken: user.token() };
     }
-
-    err.message = 'Incorrect email or password';
+  } catch (error) {
+    return new APIError(error);
   }
 
-  throw new Error(err);
+  // const user = await this.scope('login').findOne({ where: { username } });
+  // const err = {
+  //   status: (err);
 };
 
 User.checkDuplicateEmail = function checkDuplicateEmail(error) {
