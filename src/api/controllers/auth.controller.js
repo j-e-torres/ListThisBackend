@@ -28,6 +28,6 @@ exports.register = async (req, res, next) => {
       },
     });
   } catch (error) {
-    next(error);
+    await next(User.checkDuplicateEmail(error));
   }
 };

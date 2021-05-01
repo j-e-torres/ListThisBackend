@@ -6,6 +6,7 @@ const httpStatus = require('http-status');
 const { db } = require('../../config/sequelize');
 const { jwtSecret } = require('../../config/vars');
 const { roles } = require('../utils/constants');
+const APIError = require('../utils/APIError');
 
 const User = db.define(
   'user',
@@ -134,6 +135,19 @@ User.authenticate = async function authenticate(options) {
   }
 
   throw new Error(err);
+};
+
+User.checkDuplicateEmail = function checkDuplicateEmail(error) {
+  if (error.name === 'SequelizeUniqueConstraintError') {
+    return new APIError({
+      message: error.name,
+      errors: error.errors,
+      status: httpStatus.CONFLICT,
+      isPublic: true,
+      stack: error.stack,
+    });
+  }
+  return error;
 };
 
 // instance methods

@@ -6,9 +6,19 @@ const { env } = require('../../config/vars');
  * Error handler. Send stacktrace only during development
  */
 const handler = (err, req, res, next) => {
+  // if (error.errors) {
+  //   errors = error.errors.map((err) => err.message);
+  // } else if (error.original) {
+  //   errors = [error.original.message];
+  // } else {
+  //   errors = [error.message];
+  // }
+
+  // console.error(errors);
+
   const response = {
-    code: err.status,
-    message: err.message || httpStatus[err.status],
+    status: err.status || 500,
+    message: err.message || httpStatus.INTERNAL_SERVER_ERROR,
     errors: err.errors,
     stack: err.stack,
   };
@@ -17,8 +27,7 @@ const handler = (err, req, res, next) => {
     delete response.stack;
   }
 
-  res.status(err.status);
-  res.json(response);
+  res.status(err.status || 500).json(response);
 };
 exports.handler = handler;
 

@@ -59,7 +59,7 @@ describe('User API routes', () => {
           .set('Authorization', `Bearer ${userAccessToken}`)
           .expect(httpStatus.FORBIDDEN);
 
-        expect(resp.body.code).toBe(403);
+        expect(resp.body.status).toBe(403);
         expect(resp.body.message).toBe('You do not have permission to do this');
       });
     });

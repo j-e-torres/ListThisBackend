@@ -6,6 +6,8 @@ const { User } = require('../../models');
 const { populateTestDB, cleanDB } = require('../utils');
 
 describe('Authentication API', () => {
+  const password = 'La1La1';
+
   let user;
   let admin;
   let adminAccessToken;
@@ -41,36 +43,20 @@ describe('Authentication API', () => {
       expect(res.body.data.user.username).toBe(user.username);
     });
 
-    // it('should report error when email already exists', () => {
-    //   return request(app)
-    //     .post('/v1/auth/register')
-    //     .send(dbUser)
-    //     .expect(httpStatus.CONFLICT)
-    //     .then((res) => {
-    //       const { field } = res.body.errors[0];
-    //       const { location } = res.body.errors[0];
-    //       const { messages } = res.body.errors[0];
-    //       expect(field).to.be.equal('email');
-    //       expect(location).to.be.equal('body');
-    //       expect(messages).to.include('"email" already exists');
-    //     });
-    // });
+    it('should report error when email already exists', async () => {
+      const wonderCreds = {
+        username: 'wondergirl',
+        displayName: 'wonder woman',
+        password,
+      };
 
-    // it('should report error when the email provided is not valid', () => {
-    //   user.email = 'this_is_not_an_email';
-    //   return request(app)
-    //     .post('/v1/auth/register')
-    //     .send(user)
-    //     .expect(httpStatus.BAD_REQUEST)
-    //     .then((res) => {
-    //       const { field } = res.body.errors[0];
-    //       const { location } = res.body.errors[0];
-    //       const { messages } = res.body.errors[0];
-    //       expect(field).to.be.equal('email');
-    //       expect(location).to.be.equal('body');
-    //       expect(messages).to.include('"email" must be a valid email');
-    //     });
-    // });
+      const res = await request(app)
+        .post('/v1/auth/register')
+        .send(wonderCreds)
+        .expect(httpStatus.CONFLICT);
+
+      expect(res.body.errors[0].message).toBe('Username already in use!');
+    });
 
     // it('should report error when email and password are not provided', () => {
     //   return request(app)
