@@ -1,15 +1,11 @@
 const request = require('supertest');
 const httpStatus = require('http-status');
 const app = require('../../../../app');
-const { db } = require('../../../config/sequelize');
-const { User } = require('../../models');
 const { populateTestDB, cleanDB } = require('../utils');
 
 describe('User API routes', () => {
-  const dbUsers = {};
-  const password = '123456';
-  let user;
-  let admin;
+  let newList;
+  let newTasks;
   let adminAccessToken;
   let userAccessToken;
   let supermanAdmin;
@@ -19,9 +15,12 @@ describe('User API routes', () => {
   let apples;
   let oranges;
 
-  // let newUser;
-
   beforeEach(async () => {
+    newList = {
+      listName: 'trader',
+      listNotes: 'blah',
+    };
+
     const { tokens, users, lists, tasks } = await populateTestDB();
 
     [adminAccessToken, userAccessToken] = tokens;

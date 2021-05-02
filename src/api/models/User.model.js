@@ -7,7 +7,7 @@ const { db } = require('../../config/sequelize');
 const { jwtSecret } = require('../../config/vars');
 const { roles } = require('../utils/constants');
 const APIError = require('../utils/APIError');
-const List = require('../models/List.model');
+const List = require('./List.model');
 
 const User = db.define(
   'user',
@@ -113,6 +113,7 @@ const User = db.define(
 );
 
 // model methods
+// eslint-disable-next-line consistent-return
 User.authenticate = async function authenticate(options) {
   const { username, password } = options;
 
@@ -140,10 +141,6 @@ User.authenticate = async function authenticate(options) {
   } catch (error) {
     return new APIError(error);
   }
-
-  // const user = await this.scope('login').findOne({ where: { username } });
-  // const err = {
-  //   status: (err);
 };
 
 User.checkDuplicateEmail = function checkDuplicateEmail(error) {

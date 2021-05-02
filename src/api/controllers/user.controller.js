@@ -1,5 +1,6 @@
 const httpStatus = require('http-status');
 const { User, List } = require('../models');
+const APIError = require('../utils/APIError');
 
 exports.getUsers = async (req, res, next) => {
   try {
@@ -19,6 +20,6 @@ exports.getUsers = async (req, res, next) => {
       },
     });
   } catch (error) {
-    next(error);
+    next(APIError(error));
   }
 };

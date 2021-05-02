@@ -103,7 +103,7 @@ describe('Authentication API', () => {
   });
 
   describe('POST /v1/auth/login', () => {
-    test('Should return `user` with `lists belonging to user` and `accessToken when request is ok', async () => {
+    test('Should return `user` with `lists belonging to user` and `accessToken` when request is ok', async () => {
       const loginWonder = {
         username: 'wondergirl',
         password,
@@ -117,6 +117,15 @@ describe('Authentication API', () => {
       expect(res.body.token.accessToken).toBe(userAccessToken);
       expect(res.body.data.user.username).toBe(wondergirl.username);
       expect(res.body.data.user).toHaveProperty('lists');
+    });
+
+    test('Should report `Incorrect username or password` when `username` or `password` are missing', async () => {
+      const res = await request(app)
+        .post('/v1/auth/login')
+        .send({})
+        .expect(httpStatus.BAD_REQUEST);
+
+      expect(res.body.message).toBe('Incorrect username or password');
     });
   });
 });
