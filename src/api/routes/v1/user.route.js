@@ -6,6 +6,10 @@ const authMiddleware = require('../../middleware/auth');
  * /v1/users
  */
 
+/*
+ * Routes require Authenticated users
+ */
+
 router.use(authMiddleware.authenticate);
 
 router.route('/').get(authMiddleware.authorize(), userController.getUsers);

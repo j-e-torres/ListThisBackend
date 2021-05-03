@@ -3,11 +3,17 @@
   "version": "1.0.0",
   "description": "API for ListThis",
   "main": "app.js",
+  "jest": {
+    "verbose": true,
+    "setupFilesAfterEnv": [
+      "./jest.setup.js"
+    ]
+  },
   "scripts": {
     "start": "NODE_ENV=production node ./app.js",
     "start:dev": "NODE_ENV=development nodemon ./app.js",
-    "test:models": "NODE_ENV=test jest --runInBand --detectOpenHandles --watch --verbose ./src/api/tests/modelTests/",
-    "test:api": "NODE_ENV=test jest --runInBand --detectOpenHandles --watch --verbose ./src/api/tests/apiTests/"
+    "test:models": "NODE_ENV=test jest --runInBand --detectOpenHandles --watch  ./src/api/tests/modelTests/",
+    "test:api": "NODE_ENV=test jest --runInBand --detectOpenHandles --watch  ./src/api/tests/apiTests/"
   },
   "author": "Juan",
   "license": "ISC",

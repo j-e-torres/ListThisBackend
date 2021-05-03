@@ -9,19 +9,25 @@ exports.createList = async (req, res, next) => {
   let user;
   let _tasks;
 
+  const err = new APIError({
+    status: httpStatus.BAD_REQUEST,
+    message: httpStatus.BAD_REQUEST,
+    isPublic: true,
+  });
+
   if (!list.listName || !list.listOwner) {
-    return next(
-      new APIError({
-        status: httpStatus.BAD_REQUEST,
-        message: 'List name required',
-        isPublic: true,
-      })
-    );
+    err.message = 'List name required';
+    return next(err);
+  }
+
+  if (!Array.isArray(tasks)) {
+    err.message = 'Tasks must be sent as an array';
+    return next(err);
   }
 
   try {
     _list = await List.create(list);
-    user = await User.findByPk(userId);
+    user = await User.getUser(userId);
     _tasks = await createSeedInstance(Task, tasks);
 
     await _list.addTasks(_tasks);
@@ -42,7 +48,7 @@ exports.createList = async (req, res, next) => {
       },
     });
   } catch (error) {
-    return next(APIError(error));
+    return next(error);
   }
 
   return next();

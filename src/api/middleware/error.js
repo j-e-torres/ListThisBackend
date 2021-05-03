@@ -20,8 +20,12 @@ const handler = (err, req, res, next) => {
   switch (err.name) {
     case 'SequelizeValidationError':
       response.status = httpStatus.BAD_REQUEST;
-      response.message = httpStatus.BAD_REQUEST;
       break;
+
+    // case 'SequelizeDatabaseError':
+    //   response.status = httpStatus.BAD_REQUEST;
+    //   // response.message = httpStatus.BAD_REQUEST;
+    //   break;
 
     default:
       break;

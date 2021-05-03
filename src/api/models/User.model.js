@@ -156,6 +156,20 @@ User.checkDuplicateEmail = function checkDuplicateEmail(error) {
   return error;
 };
 
+User.getUser = async function getUser(id) {
+  let user;
+  try {
+    user = await User.findByPk(id);
+    return user;
+  } catch (error) {
+    throw new APIError({
+      status: httpStatus.NOT_FOUND,
+      message: 'User does not exist',
+      isPublic: true,
+    });
+  }
+};
+
 // instance methods
 User.prototype.token = function token() {
   const playload = {
