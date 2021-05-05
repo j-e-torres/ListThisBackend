@@ -8,6 +8,7 @@ const { jwtSecret } = require('../../config/vars');
 const { roles } = require('../utils/constants');
 const APIError = require('../utils/APIError');
 const List = require('./List.model');
+const Task = require('./Task.model');
 
 const User = db.define(
   'user',
@@ -131,6 +132,11 @@ User.authenticate = async function authenticate(options) {
       include: [
         {
           model: List,
+          include: [
+            {
+              model: Task,
+            },
+          ],
         },
       ],
     });
@@ -159,7 +165,18 @@ User.checkDuplicateEmail = function checkDuplicateEmail(error) {
 User.getUser = async function getUser(id) {
   let user;
   try {
-    user = await User.findByPk(id);
+    user = await User.findByPk(id, {
+      include: [
+        {
+          model: List,
+          include: [
+            {
+              model: Task,
+            },
+          ],
+        },
+      ],
+    });
     return user;
   } catch (error) {
     throw new APIError({

@@ -1,16 +1,10 @@
 const httpStatus = require('http-status');
-const { User, List } = require('../models');
+const { User } = require('../models');
 const APIError = require('../utils/APIError');
 
 exports.getUsers = async (req, res, next) => {
   try {
-    const users = await User.findAll({
-      include: [
-        {
-          model: List,
-        },
-      ],
-    });
+    const users = await User.findAll();
 
     res.status(httpStatus.OK).json({
       status: httpStatus.OK,
@@ -20,6 +14,24 @@ exports.getUsers = async (req, res, next) => {
       },
     });
   } catch (error) {
-    next(APIError(error));
+    next(error);
+  }
+};
+
+exports.getLists = async (req, res, next) => {
+  try {
+    const user = await User.getUser(req.params.userId);
+
+    const { lists } = user;
+
+    res.status(httpStatus.OK).json({
+      status: httpStatus.OK,
+      results: lists.length,
+      data: {
+        lists,
+      },
+    });
+  } catch (error) {
+    next(error);
   }
 };

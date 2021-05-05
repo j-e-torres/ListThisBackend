@@ -9,22 +9,26 @@ const LOGGED_USER = '_loggedUser';
 
 const authorized = [ADMIN];
 
-const apiError = new APIError({
-  message: 'Unauthorized',
-  status: httpStatus.UNAUTHORIZED,
-  isPublic: true,
-});
-
 exports.authenticate = async (req, res, next) => {
   let token;
+  let bearer;
+  let decoded;
+  let currentUser;
+
+  const apiError = new APIError({
+    message: 'Unauthorized',
+    status: httpStatus.UNAUTHORIZED,
+    isPublic: true,
+  });
 
   // 1) get token and check if it exists
   if (
     req.headers.authorization &&
     req.headers.authorization.startsWith('Bearer')
   ) {
-    // eslint-disable-next-line prefer-destructuring
-    token = req.headers.authorization.split(' ')[1];
+    [bearer, token] = req.headers.authorization.split(' ');
+  } else {
+    return next(apiError);
   }
 
   if (!token) {
@@ -32,14 +36,19 @@ exports.authenticate = async (req, res, next) => {
   }
 
   // 2) verify token
-  const decoded = await jwt.decode(token, jwtSecret);
+  try {
+    decoded = await jwt.decode(token, jwtSecret);
+  } catch (error) {
+    apiError.message = 'Invalid token';
+    return next(apiError);
+  }
 
   // 3) check if user exists
-  const currentUser = await User.findByPk(decoded.id);
 
-  if (!currentUser) {
-    apiError.message = 'User with this token no longer exists';
-    return next(apiError);
+  try {
+    currentUser = await User.getUser(decoded.id);
+  } catch (error) {
+    return next(error);
   }
 
   // 4) if user changed password after token issued
@@ -55,9 +64,13 @@ exports.authenticate = async (req, res, next) => {
 };
 
 exports.authorize = (roles = authorized) => (req, res, next) => {
+  const apiError = new APIError({
+    message: 'You do not have permission to do this',
+    status: httpStatus.FORBIDDEN,
+    isPublic: true,
+  });
+
   if (!roles.includes(req.user.role)) {
-    apiError.message = 'You do not have permission to do this';
-    apiError.status = httpStatus.FORBIDDEN;
     return next(apiError);
   }
 

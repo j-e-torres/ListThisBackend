@@ -14,4 +14,6 @@ router.use(authMiddleware.authenticate);
 
 router.route('/').get(authMiddleware.authorize(), userController.getUsers);
 
+router.route('/:userId/lists').get(userController.getLists);
+
 module.exports = router;

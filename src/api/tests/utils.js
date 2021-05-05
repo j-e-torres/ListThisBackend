@@ -1,4 +1,4 @@
-const bcrypt = require('bcryptjs');
+// const bcrypt = require('bcryptjs');
 const { List, User, Task } = require('../models');
 
 exports.populateTestDB = async () => {
@@ -9,7 +9,7 @@ exports.populateTestDB = async () => {
   // await Task.truncate({ cascade: true });
 
   const password = 'La1La1';
-  const hashedPassword = await bcrypt.hash(password, 1);
+  // const hashedPassword = await bcrypt.hash(password, 1);
 
   const dbUsers = {
     superman: {
@@ -54,13 +54,6 @@ exports.populateTestDB = async () => {
   const apples = await Task.create(dbTasks.apples);
   const oranges = await Task.create(dbTasks.oranges);
 
-  // await superman.save();
-  // await wondergirl.save();
-  // await traderjoes.save();
-  // await keyfood.save();
-  // await apples.save();
-  // await oranges.save();
-
   const adminAccessToken = (
     await User.authenticate({
       username: dbUsers.superman.username,
@@ -75,11 +68,11 @@ exports.populateTestDB = async () => {
     })
   ).accessToken;
 
-  // await superman.setLists(traderjoes);
-  // await wondergirl.setLists(keyfood);
+  await superman.setLists(traderjoes);
+  await wondergirl.setLists(keyfood);
 
-  // await traderjoes.setTasks(apples);
-  // await keyfood.setTasks(oranges);
+  await traderjoes.setTasks(apples);
+  await keyfood.setTasks(oranges);
 
   return {
     tokens: [adminAccessToken, userAccessToken],

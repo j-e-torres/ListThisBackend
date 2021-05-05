@@ -2,7 +2,7 @@ const request = require('supertest');
 const httpStatus = require('http-status');
 const app = require('../../../../app');
 const { List } = require('../../models');
-const { populateTestDB, cleanDB, closeDB } = require('../utils');
+const { populateTestDB, cleanDB } = require('../utils');
 
 describe('List API routes', () => {
   let newList;
