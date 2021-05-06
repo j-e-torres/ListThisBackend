@@ -94,6 +94,15 @@ describe('Task API routes', () => {
 
         expect(res.body.data.task.completed).toBe(true);
       });
+
+      test('Should report error when `taskId` is invalid', async () => {
+        const res = await request(app)
+          .patch(`/v1/tasks/''/complete`)
+          .set('Authorization', `Bearer ${userAccessToken}`)
+          .expect(httpStatus.NOT_FOUND);
+
+        expect(res.body.message).toBe('Task does not exist');
+      });
     });
   });
 });

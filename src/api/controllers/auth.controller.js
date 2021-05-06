@@ -28,7 +28,7 @@ exports.register = async (req, res, next) => {
       },
     });
   } catch (error) {
-    await next(User.checkDuplicateEmail(error));
+    await next(User.checkDuplicateUsername(error));
   }
 };
 

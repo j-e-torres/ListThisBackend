@@ -149,7 +149,7 @@ User.authenticate = async function authenticate(options) {
   }
 };
 
-User.checkDuplicateEmail = function checkDuplicateEmail(error) {
+User.checkDuplicateUsername = function checkDuplicateUsername(error) {
   if (error.name === 'SequelizeUniqueConstraintError') {
     return new APIError({
       message: error.name,
