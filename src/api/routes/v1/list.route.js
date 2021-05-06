@@ -13,4 +13,6 @@ router.use(authMiddleware.authenticate);
 
 router.route('/').post(listController.createList);
 
+router.route('/:listId').delete(listController.deleteList);
+
 module.exports = router;

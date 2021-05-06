@@ -52,3 +52,18 @@ exports.createList = async (req, res, next) => {
 
   return next();
 };
+
+exports.deleteList = async (req, res, next) => {
+  try {
+    await List.destroy({ where: { id: req.params.listId } });
+
+    res.status(httpStatus.NO_CONTENT).json({
+      status: httpStatus.NO_CONTENT,
+      message: 'Successfully deleted',
+    });
+  } catch (error) {
+    return next(error);
+  }
+
+  return next();
+};

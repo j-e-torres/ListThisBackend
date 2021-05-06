@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 const request = require('supertest');
 const httpStatus = require('http-status');
 const app = require('../../../../app');
@@ -36,7 +37,7 @@ describe('List API routes', () => {
     await cleanDB();
   });
 
-  describe.skip('POST routes', () => {
+  describe('POST routes', () => {
     describe('POST /v1/lists', () => {
       test('Should be able to create a list with tasks when request is ok', async () => {
         newList.listOwner = wondergirl.username;
@@ -133,6 +134,20 @@ describe('List API routes', () => {
           .expect(httpStatus.BAD_REQUEST);
 
         expect(res.body.errors[0].message).toBe('Task name required');
+      });
+    });
+  });
+
+  describe('DELETE routes', () => {
+    describe('DELETE /v1/lists/:listId', () => {
+      test('Should be able to delete a list', async () => {
+        await request(app)
+          .delete(`/v1/lists/${traderjoes.id}`)
+          .set('Authorization', `Bearer ${userAccessToken}`)
+          .expect(httpStatus.NO_CONTENT);
+
+        const lists = await List.findAll();
+        expect(lists).toHaveLength(1);
       });
     });
   });
