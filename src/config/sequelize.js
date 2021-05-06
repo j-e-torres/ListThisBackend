@@ -1,5 +1,5 @@
 const { Sequelize } = require('sequelize');
-const { postgres } = require('./vars');
+const { postgres, env } = require('./vars');
 
 const db = new Sequelize(postgres.uri, {
   logging: false,
@@ -11,6 +11,9 @@ const connect = () =>
     .authenticate()
     .then(async () => {
       console.log('Sequelize Postgres connected');
+      // if (env === 'test') {
+      //   await db.sync({ force: true });
+      // }
       await db.sync();
     })
     .catch((err) => {

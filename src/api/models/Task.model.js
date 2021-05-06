@@ -1,4 +1,3 @@
-/* eslint-disable func-names */
 const Sequelize = require('sequelize');
 const { db } = require('../../config/sequelize');
 
@@ -30,8 +29,16 @@ const Task = db.define('task', {
   },
 });
 
+Task.createTasks = async function createTasks({ tasks, listId }) {
+  const newTasks = await Promise.all(
+    tasks.map((task) => Task.create({ taskName: task.taskName, listId }))
+  );
+
+  return newTasks;
+};
+
 // instance methods
-Task.prototype.completeTask = function () {
+Task.prototype.completeTask = function completeTask() {
   return this.update({ completed: true });
 };
 

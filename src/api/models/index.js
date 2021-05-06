@@ -10,7 +10,12 @@ List.belongsToMany(User, {
 });
 
 List.hasMany(Task);
-Task.belongsTo(List);
+Task.belongsTo(List, {
+  foreignKey: {
+    name: 'listId',
+    allowNull: false,
+  },
+});
 
 module.exports = {
   User,

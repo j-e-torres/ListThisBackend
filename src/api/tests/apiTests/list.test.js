@@ -81,7 +81,7 @@ describe('List API routes', () => {
         expect(res.body.message).toBe('List name required');
       });
 
-      test('Should report error when `tasks` is not an array', async () => {
+      test('Should report error when `tasks` is not an array or an empty array', async () => {
         newList.listOwner = wondergirl.username;
 
         const req = {
@@ -96,7 +96,7 @@ describe('List API routes', () => {
           .send(req)
           .expect(httpStatus.BAD_REQUEST);
 
-        expect(res.body.message).toBe('Tasks must be sent as an array');
+        expect(res.body.message).toBe('Tasks sent are invalid format');
       });
 
       test('Should report error when `userId` is not  valid', async () => {
@@ -122,7 +122,7 @@ describe('List API routes', () => {
 
         const req = {
           list: newList,
-          tasks: [{}],
+          tasks: [''],
           userId: wondergirl.id,
         };
 

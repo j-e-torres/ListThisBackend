@@ -4,9 +4,9 @@ const { List, User, Task } = require('../models');
 exports.populateTestDB = async () => {
   // await db.sync({ force: true });
 
-  // await User.truncate({ cascade: true });
-  // await List.truncate({ cascade: true });
-  // await Task.truncate({ cascade: true });
+  await User.truncate({ cascade: true });
+  await List.truncate({ cascade: true });
+  await Task.truncate({ cascade: true });
 
   const password = 'La1La1';
   // const hashedPassword = await bcrypt.hash(password, 1);
