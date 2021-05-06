@@ -14,4 +14,6 @@ router.use(authMiddleware.authenticate);
 
 router.route('/').post(taskController.createTask);
 
+router.route('/:taskId/complete').patch(taskController.completeTask);
+
 module.exports = router;

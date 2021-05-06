@@ -1,5 +1,7 @@
 const Sequelize = require('sequelize');
+const httpStatus = require('http-status');
 const { db } = require('../../config/sequelize');
+const APIError = require('../utils/APIError');
 
 const Task = db.define('task', {
   id: {
@@ -29,12 +31,26 @@ const Task = db.define('task', {
   },
 });
 
+// model methods
 Task.createTasks = async function createTasks({ tasks, listId }) {
   const newTasks = await Promise.all(
     tasks.map((task) => Task.create({ taskName: task.taskName, listId }))
   );
 
   return newTasks;
+};
+
+Task.getTask = async function getTask(id) {
+  try {
+    const task = await Task.findByPk(id);
+    return task;
+  } catch (error) {
+    throw new APIError({
+      status: httpStatus.NOT_FOUND,
+      message: 'Task does not exist',
+      isPublic: true,
+    });
+  }
 };
 
 // instance methods

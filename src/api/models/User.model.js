@@ -163,9 +163,8 @@ User.checkDuplicateEmail = function checkDuplicateEmail(error) {
 };
 
 User.getUser = async function getUser(id) {
-  let user;
   try {
-    user = await User.findByPk(id, {
+    const user = await User.findByPk(id, {
       include: [
         {
           model: List,

@@ -3,7 +3,7 @@ const { Task } = require('../models');
 const APIError = require('../utils/APIError');
 
 exports.createTask = async (req, res, next) => {
-  const { listId, tasks } = req.body;
+  const { tasks } = req.body;
 
   if (!Array.isArray(tasks) || tasks.length < 1) {
     return next(
@@ -22,6 +22,24 @@ exports.createTask = async (req, res, next) => {
       status: httpStatus.CREATED,
       data: {
         tasks: createdTasks,
+      },
+    });
+  } catch (error) {
+    return next(error);
+  }
+
+  return next();
+};
+
+exports.completeTask = async (req, res, next) => {
+  try {
+    const task = await Task.getTask(req.params.taskId);
+    const completed = await task.completeTask();
+
+    res.status(httpStatus.OK).json({
+      status: httpStatus.OK,
+      data: {
+        task: completed,
       },
     });
   } catch (error) {

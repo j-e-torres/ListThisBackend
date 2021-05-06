@@ -3,7 +3,7 @@ const httpStatus = require('http-status');
 const app = require('../../../../app');
 const { populateTestDB, cleanDB } = require('../utils');
 
-describe('User API routes', () => {
+describe.skip('User API routes', () => {
   // beforeAll(async () => {
   //   await cleanDB();
   // });

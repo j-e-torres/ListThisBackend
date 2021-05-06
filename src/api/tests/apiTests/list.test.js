@@ -36,7 +36,7 @@ describe('List API routes', () => {
     await cleanDB();
   });
 
-  describe('POST routes', () => {
+  describe.skip('POST routes', () => {
     describe('POST /v1/lists', () => {
       test('Should be able to create a list with tasks when request is ok', async () => {
         newList.listOwner = wondergirl.username;

@@ -83,4 +83,17 @@ describe('Task API routes', () => {
       });
     });
   });
+
+  describe('PATCH routes', () => {
+    describe('PATCH /v1/tasks/:taskId/complete', () => {
+      test('Should be able to `complete` task', async () => {
+        const res = await request(app)
+          .patch(`/v1/tasks/${oranges.id}/complete`)
+          .set('Authorization', `Bearer ${userAccessToken}`)
+          .expect(httpStatus.OK);
+
+        expect(res.body.data.task.completed).toBe(true);
+      });
+    });
+  });
 });
