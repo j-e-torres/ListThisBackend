@@ -2,6 +2,7 @@ const request = require('supertest');
 const httpStatus = require('http-status');
 const app = require('../../../../app');
 const { populateTestDB, cleanDB } = require('../utils');
+const { Task } = require('../../models');
 
 describe('Task API routes', () => {
   let newTasks;
@@ -102,6 +103,20 @@ describe('Task API routes', () => {
           .expect(httpStatus.NOT_FOUND);
 
         expect(res.body.message).toBe('Task does not exist');
+      });
+    });
+  });
+
+  describe('DELETE routes', () => {
+    describe('DELETE /v1/tasks/:taskId', () => {
+      test('Should be able to delete task', async () => {
+        await request(app)
+          .delete(`/v1/tasks/${oranges.id}`)
+          .set('Authorization', `Bearer ${userAccessToken}`)
+          .expect(httpStatus.NO_CONTENT);
+
+        const tasks = await Task.findAll();
+        expect(tasks).toHaveLength(1);
       });
     });
   });
