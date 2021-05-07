@@ -1,13 +1,12 @@
 /* eslint-disable no-underscore-dangle */
 const httpStatus = require('http-status');
-const { User, List, Task } = require('../models');
+const { List, Task } = require('../models');
 const APIError = require('../utils/APIError');
 
 exports.createList = async (req, res, next) => {
-  const { list, userId, tasks } = req.body;
+  const { list, tasks } = req.body;
+  const { user } = req;
   let _list;
-  let user;
-  // let _tasks;
 
   const err = new APIError({
     status: httpStatus.BAD_REQUEST,
@@ -27,7 +26,6 @@ exports.createList = async (req, res, next) => {
 
   try {
     _list = await List.create(list);
-    user = await User.getUser(userId);
     await Task.createTasks({ tasks, listId: _list.id });
 
     await user.addList(_list);
@@ -40,7 +38,7 @@ exports.createList = async (req, res, next) => {
       ],
     });
 
-    res.status(httpStatus.CREATED).json({
+    return res.status(httpStatus.CREATED).json({
       status: httpStatus.CREATED,
       data: {
         list: updatedList,
@@ -49,21 +47,17 @@ exports.createList = async (req, res, next) => {
   } catch (error) {
     return next(error);
   }
-
-  return next();
 };
 
 exports.deleteList = async (req, res, next) => {
   try {
     await List.destroy({ where: { id: req.params.listId } });
 
-    res.status(httpStatus.NO_CONTENT).json({
+    return res.status(httpStatus.NO_CONTENT).json({
       status: httpStatus.NO_CONTENT,
       message: 'Successfully deleted',
     });
   } catch (error) {
     return next(error);
   }
-
-  return next();
 };

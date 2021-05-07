@@ -18,7 +18,7 @@ exports.createTask = async (req, res, next) => {
   try {
     const createdTasks = await Task.createTasks(req.body);
 
-    res.status(httpStatus.CREATED).json({
+    return res.status(httpStatus.CREATED).json({
       status: httpStatus.CREATED,
       data: {
         tasks: createdTasks,
@@ -27,8 +27,6 @@ exports.createTask = async (req, res, next) => {
   } catch (error) {
     return next(error);
   }
-
-  return next();
 };
 
 exports.completeTask = async (req, res, next) => {
@@ -36,7 +34,7 @@ exports.completeTask = async (req, res, next) => {
     const task = await Task.getTask(req.params.taskId);
     const completed = await task.completeTask();
 
-    res.status(httpStatus.OK).json({
+    return res.status(httpStatus.OK).json({
       status: httpStatus.OK,
       data: {
         task: completed,
@@ -45,21 +43,17 @@ exports.completeTask = async (req, res, next) => {
   } catch (error) {
     return next(error);
   }
-
-  return next();
 };
 
 exports.deleteTask = async (req, res, next) => {
   try {
     await Task.destroy({ where: { id: req.params.taskId } });
 
-    res.status(httpStatus.NO_CONTENT).json({
+    return res.status(httpStatus.NO_CONTENT).json({
       status: httpStatus.NO_CONTENT,
       message: 'Successfully deleted',
     });
   } catch (error) {
     return next(error);
   }
-
-  return next();
 };

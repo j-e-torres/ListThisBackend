@@ -20,7 +20,7 @@ exports.register = async (req, res, next) => {
 
     const token = createResponseToken(user, user.token());
 
-    res.status(httpStatus.CREATED).json({
+    return res.status(httpStatus.CREATED).json({
       status: httpStatus.CREATED,
       token,
       data: {
@@ -28,7 +28,7 @@ exports.register = async (req, res, next) => {
       },
     });
   } catch (error) {
-    await next(User.checkDuplicateUsername(error));
+    return next(User.checkDuplicateUsername(error));
   }
 };
 

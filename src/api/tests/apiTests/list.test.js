@@ -45,7 +45,6 @@ describe('List API routes', () => {
         const req = {
           list: newList,
           tasks: newTasks,
-          userId: wondergirl.id,
         };
 
         const res = await request(app)
@@ -58,6 +57,7 @@ describe('List API routes', () => {
           data: { list },
         } = res.body;
 
+        // console.log('yeah boy', list);
         expect(list.listName).toBe(newList.listName);
         expect(list).toHaveProperty('tasks');
         expect(list.tasks).toHaveLength(3);
@@ -70,7 +70,6 @@ describe('List API routes', () => {
         const req = {
           list: {},
           tasks: newTasks,
-          userId: wondergirl.id,
         };
 
         const res = await request(app)
@@ -88,7 +87,6 @@ describe('List API routes', () => {
         const req = {
           list: newList,
           tasks: 'newTasks',
-          userId: wondergirl.id,
         };
 
         const res = await request(app)
@@ -100,31 +98,12 @@ describe('List API routes', () => {
         expect(res.body.message).toBe('Tasks sent are invalid format');
       });
 
-      test('Should report error when `userId` is not  valid', async () => {
-        newList.listOwner = wondergirl.username;
-
-        const req = {
-          list: newList,
-          tasks: newTasks,
-          userId: '',
-        };
-
-        const res = await request(app)
-          .post('/v1/lists')
-          .set('Authorization', `Bearer ${userAccessToken}`)
-          .send(req)
-          .expect(httpStatus.NOT_FOUND);
-
-        expect(res.body.message).toBe('User does not exist');
-      });
-
       test('Should report error when `tasks` do not have `taskName`', async () => {
         newList.listOwner = wondergirl.username;
 
         const req = {
           list: newList,
           tasks: [''],
-          userId: wondergirl.id,
         };
 
         const res = await request(app)

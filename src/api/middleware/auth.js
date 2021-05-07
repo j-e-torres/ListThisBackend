@@ -5,8 +5,7 @@ const { jwtSecret } = require('../../config/vars');
 const APIError = require('../utils/APIError');
 
 const ADMIN = 'admin';
-const LOGGED_USER = '_loggedUser';
-
+const LOGGED_USER = 'logged_user';
 const authorized = [ADMIN];
 
 exports.authenticate = async (req, res, next) => {
@@ -21,7 +20,9 @@ exports.authenticate = async (req, res, next) => {
     isPublic: true,
   });
 
-  // 1) get token and check if it exists
+  /**
+   * Parse token and check if it exists
+   */
   if (
     req.headers.authorization &&
     req.headers.authorization.startsWith('Bearer')
@@ -35,7 +36,9 @@ exports.authenticate = async (req, res, next) => {
     return next(apiError);
   }
 
-  // 2) verify token
+  /**
+   * Verify and decode token
+   */
   try {
     decoded = await jwt.decode(token, jwtSecret);
   } catch (error) {
@@ -43,7 +46,9 @@ exports.authenticate = async (req, res, next) => {
     return next(apiError);
   }
 
-  // 3) check if user exists
+  /**
+   * Check if user exists with token
+   */
 
   try {
     currentUser = await User.getUser(decoded.id);
@@ -51,14 +56,9 @@ exports.authenticate = async (req, res, next) => {
     return next(error);
   }
 
-  // 4) if user changed password after token issued
-  // if (currentUser.changedPasswordAfter(decoded.iat)) {
-  //   return next(
-  //     new AppError('User recently changed password, please log in again', 401)
-  //   );
-  // }
-
-  // grant access
+  /**
+   * Append user to req and continue
+   */
   req.user = currentUser;
   return next();
 };

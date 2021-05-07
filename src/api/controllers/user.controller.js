@@ -6,7 +6,7 @@ exports.getUsers = async (req, res, next) => {
   try {
     const users = await User.findAll();
 
-    res.status(httpStatus.OK).json({
+    return res.status(httpStatus.OK).json({
       status: httpStatus.OK,
       results: users.length,
       data: {
@@ -14,7 +14,7 @@ exports.getUsers = async (req, res, next) => {
       },
     });
   } catch (error) {
-    next(error);
+    return next(error);
   }
 };
 
@@ -24,7 +24,7 @@ exports.getLists = async (req, res, next) => {
 
     const { lists } = user;
 
-    res.status(httpStatus.OK).json({
+    return res.status(httpStatus.OK).json({
       status: httpStatus.OK,
       results: lists.length,
       data: {
@@ -32,6 +32,6 @@ exports.getLists = async (req, res, next) => {
       },
     });
   } catch (error) {
-    next(error);
+    return next(error);
   }
 };

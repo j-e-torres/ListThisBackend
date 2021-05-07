@@ -9,7 +9,9 @@ List.belongsToMany(User, {
   through: 'userlist',
 });
 
-List.hasMany(Task);
+List.hasMany(Task, {
+  foreignKey: 'listId',
+});
 Task.belongsTo(List, {
   foreignKey: {
     name: 'listId',
