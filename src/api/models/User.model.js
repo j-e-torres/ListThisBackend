@@ -168,11 +168,7 @@ User.getUser = async function getUser(id) {
       include: [
         {
           model: List,
-          include: [
-            {
-              model: Task,
-            },
-          ],
+          include: [Task],
         },
       ],
     });

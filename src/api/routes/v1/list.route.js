@@ -15,4 +15,6 @@ router.route('/').post(listController.createList);
 
 router.route('/:listId').delete(listController.deleteList);
 
+router.route('/:listId/users').put(listController.addUser);
+
 module.exports = router;

@@ -2,7 +2,7 @@
 const request = require('supertest');
 const httpStatus = require('http-status');
 const app = require('../../../../app');
-const { List } = require('../../models');
+const { List, User } = require('../../models');
 const { populateTestDB, cleanDB } = require('../utils');
 
 describe('List API routes', () => {
@@ -57,7 +57,6 @@ describe('List API routes', () => {
           data: { list },
         } = res.body;
 
-        // console.log('yeah boy', list);
         expect(list.listName).toBe(newList.listName);
         expect(list).toHaveProperty('tasks');
         expect(list.tasks).toHaveLength(3);
@@ -127,6 +126,31 @@ describe('List API routes', () => {
 
         const lists = await List.findAll();
         expect(lists).toHaveLength(1);
+      });
+    });
+  });
+
+  describe('PUT routes', () => {
+    describe('PUT /v1/lists/:listId/users', () => {
+      test('`listOwner` should be able to add user to list', async () => {
+        const req = {
+          username: wondergirl.username,
+          list: {
+            listOwner: supermanAdmin.username,
+          },
+        };
+
+        const res = await request(app)
+          .put(`/v1/lists/${traderjoes.id}/users`)
+          .set('Authorization', `Bearer ${adminAccessToken}`)
+          .send(req)
+          .expect(httpStatus.OK);
+
+        // const userLists = await User.getUser(wondergirl.id);
+        const uggs = await wondergirl.getLists();
+        console.log('sup son', uggs[0].userlist);
+        // expect(userLists.lists).toHaveLength(2);
+        expect(res.body.data.list.users).toHaveLength(2);
       });
     });
   });
