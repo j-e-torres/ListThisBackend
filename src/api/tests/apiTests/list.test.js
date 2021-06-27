@@ -34,7 +34,7 @@ describe('List API routes', () => {
   });
 
   afterEach(async () => {
-    await cleanDB();
+    // await cleanDB();
   });
 
   describe('POST routes', () => {
@@ -147,10 +147,12 @@ describe('List API routes', () => {
           .expect(httpStatus.OK);
 
         // const userLists = await User.getUser(wondergirl.id);
-        const uggs = await wondergirl.getLists();
-        console.log('sup son', uggs[0].userlist);
+        // const uggs = await wondergirl.getLists();
+        // console.log('sup son', uggs);
+        // console.log('sup bruh', res.body.data);
+
         // expect(userLists.lists).toHaveLength(2);
-        expect(res.body.data.list.users).toHaveLength(2);
+        expect(res.body.data.users).toHaveLength(2);
       });
     });
   });

@@ -1,11 +1,12 @@
 /* eslint-disable no-unused-vars */
+// eslint-disable-next-line node/no-unpublished-require
 const request = require('supertest');
 const httpStatus = require('http-status');
 const app = require('../../../../app');
 const { populateTestDB, cleanDB } = require('../utils');
 const { Task } = require('../../models');
 
-describe.skip('Task API routes', () => {
+describe('Task API routes', () => {
   let newTasks;
   let adminAccessToken;
   let userAccessToken;

@@ -82,11 +82,12 @@ exports.addUser = async (req, res, next) => {
 
     await foundList.addUser(addUser);
     await addUser.addList(foundList);
+    const updatedListUsers = await foundList.getUsers();
 
     return res.status(httpStatus.OK).json({
       status: httpStatus.OK,
       data: {
-        list: foundList,
+        users: updatedListUsers,
       },
     });
   } catch (error) {

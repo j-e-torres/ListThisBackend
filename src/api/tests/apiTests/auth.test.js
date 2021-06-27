@@ -1,4 +1,5 @@
 /* eslint-disable no-unused-vars */
+// eslint-disable-next-line node/no-unpublished-require
 const request = require('supertest');
 const httpStatus = require('http-status');
 const app = require('../../../../app');
@@ -6,7 +7,7 @@ const { db } = require('../../../config/sequelize');
 const { User } = require('../../models');
 const { populateTestDB, cleanDB } = require('../utils');
 
-describe.skip('Authentication API', () => {
+describe('Authentication API', () => {
   const password = 'La1La1';
 
   let newUser;

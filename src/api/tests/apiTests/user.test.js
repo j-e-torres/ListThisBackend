@@ -1,10 +1,11 @@
 /* eslint-disable no-unused-vars */
+// eslint-disable-next-line node/no-unpublished-require
 const request = require('supertest');
 const httpStatus = require('http-status');
 const app = require('../../../../app');
 const { populateTestDB, cleanDB } = require('../utils');
 
-describe.skip('User API routes', () => {
+describe('User API routes', () => {
   // beforeAll(async () => {
   //   await cleanDB();
   // });

@@ -59,23 +59,26 @@ exports.authenticate = async (req, res, next) => {
   /**
    * Append user to req and continue
    */
+  // console.log('currentUser from auth middleware', currentUser.username);
   req.user = currentUser;
   return next();
 };
 
-exports.authorize = (roles = authorized) => (req, res, next) => {
-  const apiError = new APIError({
-    message: 'You do not have permission to do this',
-    status: httpStatus.FORBIDDEN,
-    isPublic: true,
-  });
+exports.authorize =
+  (roles = authorized) =>
+  (req, res, next) => {
+    const apiError = new APIError({
+      message: 'You do not have permission to do this',
+      status: httpStatus.FORBIDDEN,
+      isPublic: true,
+    });
 
-  if (!roles.includes(req.user.role)) {
-    return next(apiError);
-  }
+    if (!roles.includes(req.user.role)) {
+      return next(apiError);
+    }
 
-  return next();
-};
+    return next();
+  };
 
 exports.ADMIN = ADMIN;
 exports.LOGGED_USER = LOGGED_USER;
